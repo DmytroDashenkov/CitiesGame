@@ -3,30 +3,11 @@ package com.madebyme.citiesgame;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
 
-public class DBManager extends SQLiteOpenHelper {
-	private final String[] dbCategories = {
-			"id integer primary key autoincrement", "name text",
-			"firstLeter text", "lastLetter text" };
+public class DBManager {
+	
 	ContentValues cv = new ContentValues();
 	String[] cities;
-
-	public DBManager(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, name, factory, version);
-	}
-
-	@Override
-	public void onCreate(SQLiteDatabase database) {
-		database.execSQL("Cities", dbCategories);
-	}
-
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersoin) {
-
-	}
 
 	private void prepareDBFeed(Context context) {
 		String[] letters = null;
@@ -50,7 +31,8 @@ public class DBManager extends SQLiteOpenHelper {
 	}
 
 	public SQLiteDatabase inputDBFeed(Context context) {
-		SQLiteDatabase database = this.getWritableDatabase();
+		DBOpenHelper dbOpenHelper = new DBOpenHelper(context, "Cities", null, 1);
+		SQLiteDatabase database = dbOpenHelper.getWritableDatabase();
 		prepareDBFeed(context);
 		int rowsAmount = cities.length;
 		for (int i = 0; true; i++) {

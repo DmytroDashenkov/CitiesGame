@@ -3,6 +3,7 @@ package com.madebyme.citiesgame;
 import java.io.IOException;
 
 import android.os.Bundle;
+import android.os.DropBoxManager;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -22,6 +23,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 	private Button ok;
 	private EditText enterCity;
 	private TextView compCity;
+	private DBOpenHelper dbOpenHelper;
 	private DBManager dbManager;
 	private Thread dbCreation;
 	private SQLiteDatabase db;
@@ -57,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 		ok = (Button) findViewById(R.id.ok);
 		enterCity = (EditText) findViewById(R.id.user_city);
 		compCity = (TextView) findViewById(R.id.device_city);
-		dbManager = new DBManager(this, "Cities", null, DB_VERSION);
+		dbOpenHelper = new DBOpenHelper(this, "Cities", null, DB_VERSION);
 		dbCreation = new Thread(this);
 		cf = new CitiesFinder(this);
 		ok.setOnClickListener(this);
