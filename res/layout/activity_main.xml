@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    tools:context=".MainActivity" >
+
+    <Button
+        android:id="@+id/ok"
+        style="@style/ok_style" />
+
+    <TextView
+        android:id="@+id/device_city"
+        style="@style/device_city_style" />
+
+    <EditText
+        android:id="@+id/user_city"
+        style="@style/user_city_style" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

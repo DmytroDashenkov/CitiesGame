@@ -1,0 +1,53 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+    <style name="ok_style">
+        <item name="android:layout_width">@dimen/ok_width</item>
+        <item name="android:layout_height">@dimen/ok_height</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">@dimen/ok_margin_bottom</item>
+        <item name="android:text">@string/ok_text</item>
+        <item name="android:background">@color/ok_color</item>
+        <item name="android:textColor">@color/ok_text_color</item>
+        <!-- Молодец!) -->
+    </style>
+    
+    <style name="user_city_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_above">@+id/device_city</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">@dimen/user_city_margin_bottom</item>
+        <item name="android:background">@color/user_city_color</item>
+        <item name="android:inputType">textCapWords</item>
+        <item name="android:ems">10</item>
+        <item name="android:hint">@string/hint</item>
+    </style>
+    
+    <style name="device_city_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:text">@string/invitement</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+</resources>

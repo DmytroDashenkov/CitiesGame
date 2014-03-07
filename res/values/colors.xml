@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_color">#BBBBFF</color>
+    <color name="ok_color">#228</color>
+    <color name="ok_text_color">#FFF</color>
+    <color name="user_city_color">#EEF</color>
+    
+</resources>
