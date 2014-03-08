@@ -29,7 +29,6 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 	private SQLiteDatabase db;
 	private ContentValues cv;
 	CitiesFinder cf;
-	private final int DB_VERSION = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 		ok = (Button) findViewById(R.id.ok);
 		enterCity = (EditText) findViewById(R.id.user_city);
 		compCity = (TextView) findViewById(R.id.device_city);
-		dbOpenHelper = new DBOpenHelper(this, "Cities", null, DB_VERSION);
+		dbOpenHelper = new DBOpenHelper(this);
 		dbCreation = new Thread(this);
 		cf = new CitiesFinder(this);
 		ok.setOnClickListener(this);

@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
 
-	public DBOpenHelper(Context context, String name, CursorFactory factory,
-			int version) {
-		super(context, name, factory, version);
+	public DBOpenHelper(Context context) {
+		super(context, "Cities", null, 1);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		database.execSQL("create table Cities ("
-				+ "id integer primary key autoincrement," + "name text"
-				+ "firstLetter text" + "lastLetter" + ");");
+		String query = "CREATE TABLE " + "Cities" + " (" + "_id"
+				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + "Name" + "TEXT, "
+				+ "firstLetter" + "TEXT, " + "lastLetter" + "TEXT);";
+		database.execSQL(query);
 	}
 
 	@Override

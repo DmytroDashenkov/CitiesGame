@@ -31,7 +31,7 @@ public class DBManager {
 	}
 
 	public SQLiteDatabase inputDBFeed(Context context) {
-		DBOpenHelper dbOpenHelper = new DBOpenHelper(context, "Cities", null, 1);
+		DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
 		SQLiteDatabase database = dbOpenHelper.getWritableDatabase();
 		prepareDBFeed(context);
 		int rowsAmount = cities.length;
