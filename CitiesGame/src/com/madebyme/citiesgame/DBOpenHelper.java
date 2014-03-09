@@ -13,9 +13,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		String query = "CREATE TABLE " + "Cities" + " (" + "_id"
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + "Name" + "TEXT, "
-				+ "firstLetter" + "TEXT, " + "lastLetter" + "TEXT);";
+		String query = "CREATE TABLE Cities ( _id INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, firstLetter TEXT, lastLetter TEXT);";
 		database.execSQL(query);
 	}
 

@@ -23,7 +23,6 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 	private Button ok;
 	private EditText enterCity;
 	private TextView compCity;
-	private DBOpenHelper dbOpenHelper;
 	private DBManager dbManager;
 	private Thread dbCreation;
 	private SQLiteDatabase db;
@@ -58,11 +57,10 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 		ok = (Button) findViewById(R.id.ok);
 		enterCity = (EditText) findViewById(R.id.user_city);
 		compCity = (TextView) findViewById(R.id.device_city);
-		dbOpenHelper = new DBOpenHelper(this);
 		dbCreation = new Thread(this);
 		cf = new CitiesFinder(this);
 		ok.setOnClickListener(this);
-		db = dbManager.inputDBFeed(this);
+		dbManager = new DBManager(this);
 	}
 
 	@Override
@@ -73,13 +71,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void run() {
-		String allCities = "";
-		cf = new CitiesFinder(this);
-		try {
-			allCities = cf.getAllCitiesString();
-		} catch (IOException e) {
-			Log.e("Error:", e.getMessage());
-		}
+		dbManager.inputDBFeed(this);
 		
 	}
 }
