@@ -4,9 +4,15 @@ import java.io.Serializable;
 
 public class City implements Serializable {
 	
-	String name;
-	String firstLetter;
-	String lastLetter;
+	private String name;
+	private String firstLetter;
+	private String lastLetter;
+	
+	public City(String name, String firstLetter, String lastLetter) {
+		this.setName(name);
+		this.setFirstLetter(firstLetter);
+		this.setLastLetter(lastLetter);
+	}
 	
 	public void setName(String name) {
 		this.name = name;

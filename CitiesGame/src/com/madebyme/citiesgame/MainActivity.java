@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 	private TextView compCity;
 	private DBManager dbManager;
 	private Thread dbCreation;
-	CitiesFinder cf;
+	private CitiesFinder citiesFinder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 		enterCity = (EditText) findViewById(R.id.user_city);
 		compCity = (TextView) findViewById(R.id.device_city);
 		dbCreation = new Thread(this);
-		cf = new CitiesFinder(this);
+		citiesFinder = new CitiesFinder(this);
 		ok.setOnClickListener(this);
 		dbManager = new DBManager(this);
 	}
@@ -64,7 +64,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void run() {
-		dbManager.inputDBFeed(this);
+		citiesFinder.prepareDBFeed(this);
 		
 	}
 }

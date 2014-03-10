@@ -13,13 +13,13 @@ import android.util.Log;
 public class CitiesFinder {
 	Context context;
 	String allCities;
-	String [] cities = null;
+	String[] cities = null;
 	final String FILE_NAME = "cities.txt";
 
 	public CitiesFinder(Context context) {
 		this.context = context;
 	}
-	
+
 	public String getAllCitiesString() throws IOException {
 		AssetManager am = context.getAssets();
 		InputStream is = am.open(FILE_NAME);
@@ -47,7 +47,7 @@ public class CitiesFinder {
 		Log.d("city", allCities);
 		return allCities;
 	}
-	
+
 	@SuppressWarnings("null")
 	void prepareDBFeed(Context context) {
 		String allCities = null;
@@ -60,23 +60,43 @@ public class CitiesFinder {
 		} catch (IOException e) {
 			Log.e("Error:", e.getMessage());
 		}
-		int n = -1;
-		for (int i = 1; true; i++) {
-			letter = allCities.substring(i, i + 1);
-			if (letter == null)
-				break;
-			else
-				letters[i] = letter;//TODO fatal here
-			if (letters[i] != " " && letters[i - 1] != " ") {
-				sb.append(letter);
 
-			} else {
-				cities[n + 1] = sb.toString();
-			}
+		String[] cities = allCities.split("  ");
+		for (String oneCity : cities) {
+			App.getDBManager().inputDBFeed(new City(oneCity, getLastLetter(oneCity), getFirstLetter(oneCity)));
 		}
+
+		/**
+		 * int n = -1; for (int i = 1; true; i++) { letter =
+		 * allCities.substring(i, i + 1); if (letter == null) break; else
+		 * letters[i] = letter; if (letters[i] != " " && letters[i - 1] != " ")
+		 * { sb.append(letter);
+		 * 
+		 * } else { cities[n + 1] = sb.toString(); } }
+		 */
 	}
-	
+
 	public String[] getCitiesArrey() {
 		return cities;
+	}
+
+	private String getLastLetter(String word) {
+		String letter = null;
+		try {
+			letter = word.substring(word.length() - 2, word.length() - 1);
+		} catch (StringIndexOutOfBoundsException e) {
+			Log.e("Error word:", word);
+		}
+		return letter;
+	}
+
+	private String getFirstLetter(String word) {
+		String letter = null;
+		try {
+			letter = word.substring(0, 1);
+		} catch (StringIndexOutOfBoundsException e) {
+			Log.e("Error word:", word);
+		}
+		return letter;
 	}
 }
