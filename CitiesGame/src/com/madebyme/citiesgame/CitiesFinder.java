@@ -14,7 +14,7 @@ public class CitiesFinder {
 	Context context;
 	String allCities;
 	String[] cities = null;
-	final String FILE_NAME = "cities.txt";
+	private final String FILE_NAME = "cities.txt";
 
 	public CitiesFinder(Context context) {
 		this.context = context;
@@ -48,12 +48,8 @@ public class CitiesFinder {
 		return allCities;
 	}
 
-	@SuppressWarnings("null")
 	void prepareDBFeed(Context context) {
 		String allCities = null;
-		String[] letters = null;
-		String letter;
-		StringBuilder sb = new StringBuilder();
 		CitiesFinder citiesFinder = new CitiesFinder(context);
 		try {
 			allCities = citiesFinder.getAllCitiesString();
@@ -65,28 +61,28 @@ public class CitiesFinder {
 		for (String oneCity : cities) {
 			App.getDBManager().inputDBFeed(new City(oneCity, getLastLetter(oneCity), getFirstLetter(oneCity)));
 		}
-
-		/**
-		 * int n = -1; for (int i = 1; true; i++) { letter =
-		 * allCities.substring(i, i + 1); if (letter == null) break; else
-		 * letters[i] = letter; if (letters[i] != " " && letters[i - 1] != " ")
-		 * { sb.append(letter);
-		 * 
-		 * } else { cities[n + 1] = sb.toString(); } }
-		 */
 	}
 
 	public String[] getCitiesArrey() {
 		return cities;
 	}
 
-	private String getLastLetter(String word) {
+	String getLastLetter(String word) {
 		String letter = null;
 		try {
 			letter = word.substring(word.length() - 2, word.length() - 1);
 		} catch (StringIndexOutOfBoundsException e) {
 			Log.e("Error word:", word);
 		}
+		assert letter != null;
+		if(letter.equals("ü") || letter.equals("û"))
+			try {
+				letter =  word.substring(word.length() - 3, word.length() - 2);
+			} catch (StringIndexOutOfBoundsException e) {
+				Log.e("Mistake word:", word);
+			}
+		if(letter.equals("¸"))
+			letter = "å";
 		return letter;
 	}
 
