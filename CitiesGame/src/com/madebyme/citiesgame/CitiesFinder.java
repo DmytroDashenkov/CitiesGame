@@ -73,13 +73,13 @@ public class CitiesFinder {
 			Log.e("Error word:", word);
 		}
 		assert letter != null;
-		if(letter.equals("ü") || letter.equals("û"))
+		if(letter == "ü" || letter == "û")
 			try {
 				letter =  word.substring(word.length() - 3, word.length() - 2);
 			} catch (StringIndexOutOfBoundsException e) {
 				Log.e("Mistake word:", word);
 			}
-		if(letter.equals("¸"))
+		if(letter == "¸")
 			letter = "å";
 		return letter;
 	}

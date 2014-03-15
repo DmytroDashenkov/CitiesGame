@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,24 +15,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener, Runnable {
+public class MainActivity extends Activity implements OnClickListener{
 
 	private String city;
 	private Button bt_ok;
 	private EditText et_enterCity;
 	private TextView tv_compCity;
-	private Thread dbCreation;
 	private CitiesFinder citiesFinder;
 	private DBManager manager;
 	private Cursor cursor;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initComps();
-		if (cursor.moveToFirst())
-			dbCreation.start();
+		if (!cursor.moveToFirst()){
+			MyTask task = new MyTask();
+			task.execute(this);
+		}
 
 	}
 
@@ -53,7 +55,6 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 		bt_ok = (Button) findViewById(R.id.ok);
 		et_enterCity = (EditText) findViewById(R.id.user_city);
 		tv_compCity = (TextView) findViewById(R.id.device_city);
-		dbCreation = new Thread(this);
 		citiesFinder = new CitiesFinder(this);
 		bt_ok.setOnClickListener(this);
 		manager = new DBManager(this);
@@ -68,6 +69,7 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 			String requestedLetter = citiesFinder.getLastLetter(city);
 			requestedLetter = manager.convertSmallLetterToBig(requestedLetter);
 			city = manager.findCityByFirstLetter(cursor, requestedLetter);
+			tv_compCity.setText(city);
 		}else{
 			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT).show();
 		}
@@ -79,10 +81,5 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 			return true;
 		else
 			return false;
-	}
-
-	@Override
-	public void run() {
-		citiesFinder.prepareDBFeed();
 	}
 }

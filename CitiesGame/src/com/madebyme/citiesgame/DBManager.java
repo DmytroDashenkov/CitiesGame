@@ -25,7 +25,7 @@ public class DBManager {
 
 	String findCityByFirstLetter(Cursor cursor, String letter) {
 		String name = null;
-		Cursor c = database.query("myTable", null, "firstLetter = ?",
+		Cursor c = database.query("Cities", null, "firstLetter = ?",
 				new String[] { letter }, null, null, null);
 		if(c.moveToFirst()){
 		cursor = database.rawQuery(
@@ -39,7 +39,7 @@ public class DBManager {
 	}
 	
 	boolean checkCityExistans(String city){
-		Cursor c = database.query("table", null, "Name = ?", new String[]{ city }, null, null, null);
+		Cursor c = database.query("Cities", null, "Name = ?", new String[]{ city }, null, null, null);
 		return c.moveToFirst();
 	}
 
