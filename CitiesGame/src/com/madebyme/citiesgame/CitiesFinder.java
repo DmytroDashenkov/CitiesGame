@@ -11,16 +11,16 @@ import android.content.res.AssetManager;
 import android.util.Log;
 
 public class CitiesFinder {
-	Context context;
-	String allCities;
-	String[] cities = null;
+	private Context context;
+	private String allCities;
+	private String[] cities = null;
 	private final String FILE_NAME = "cities.txt";
 
 	public CitiesFinder(Context context) {
 		this.context = context;
 	}
 
-	public String getAllCitiesString() throws IOException {
+	private String getAllCitiesString() throws IOException {
 		AssetManager am = context.getAssets();
 		InputStream is = am.open(FILE_NAME);
 		allCities = convertStreamToString(is);
@@ -48,16 +48,14 @@ public class CitiesFinder {
 		return allCities;
 	}
 
-	void prepareDBFeed(Context context) {
-		String allCities = null;
-		CitiesFinder citiesFinder = new CitiesFinder(context);
+	void prepareDBFeed() {
 		try {
-			allCities = citiesFinder.getAllCitiesString();
+			allCities = this.getAllCitiesString();
 		} catch (IOException e) {
 			Log.e("Error:", e.getMessage());
 		}
 
-		String[] cities = allCities.split("  ");
+		cities = allCities.split("  ");
 		for (String oneCity : cities) {
 			App.getDBManager().inputDBFeed(new City(oneCity, getLastLetter(oneCity), getFirstLetter(oneCity)));
 		}

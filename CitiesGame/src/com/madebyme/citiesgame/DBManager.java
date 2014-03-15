@@ -9,7 +9,6 @@ import android.util.Log;
 public class DBManager {
 
 	SQLiteDatabase database;
-	ContentValues cv = new ContentValues();
 
 	public DBManager(Context context) {
 		DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
@@ -17,6 +16,7 @@ public class DBManager {
 	}
 
 	void inputDBFeed(City model) {
+		ContentValues cv = new ContentValues();
 		cv.put("name", model.getName());
 		cv.put("firstLetter", model.getFirstLetter());
 		cv.put("lastLetter", model.getLastLetter());

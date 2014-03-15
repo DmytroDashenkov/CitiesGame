@@ -50,7 +50,6 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 	}
 
 	private void initComps() {
-		new ContentValues();
 		bt_ok = (Button) findViewById(R.id.ok);
 		et_enterCity = (EditText) findViewById(R.id.user_city);
 		tv_compCity = (TextView) findViewById(R.id.device_city);
@@ -84,7 +83,6 @@ public class MainActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void run() {
-		citiesFinder.prepareDBFeed(this);
-
+		citiesFinder.prepareDBFeed();
 	}
 }
