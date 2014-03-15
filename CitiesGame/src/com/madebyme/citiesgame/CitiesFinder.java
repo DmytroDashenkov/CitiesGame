@@ -57,7 +57,7 @@ public class CitiesFinder {
 
 		cities = allCities.split("  ");
 		for (String oneCity : cities) {
-			App.getDBManager().inputDBFeed(new City(oneCity, getLastLetter(oneCity), getFirstLetter(oneCity)));
+			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity), getLastLetter(oneCity)));
 		}
 	}
 

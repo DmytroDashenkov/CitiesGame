@@ -1,11 +1,9 @@
 package com.madebyme.citiesgame;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,19 +65,24 @@ public class MainActivity extends Activity implements OnClickListener{
 		city = et_enterCity.getText().toString();
 		if (manager.checkCityExistans(city)) {
 			String requestedLetter = citiesFinder.getLastLetter(city);
-			requestedLetter = manager.convertSmallLetterToBig(requestedLetter);
-			city = manager.findCityByFirstLetter(cursor, requestedLetter);
-			tv_compCity.setText(city);
+			try {
+				requestedLetter = requestedLetter.toUpperCase();
+				city = manager.findCityByFirstLetter(cursor, requestedLetter);
+				tv_compCity.setText(city);
+				et_enterCity.setText(null);
+			} catch (NullPointerException e) {
+				Toast.makeText(this, "Сначала введите город!", Toast.LENGTH_SHORT).show();
+			}
 		}else{
 			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT).show();
 		}
 
 	}
 
-	private boolean noMoreCitiesForThosLetterLeft(String cityName) {
+	/**private boolean noMoreCitiesForThisLetterLeft(String cityName) {
 		if (cityName == null)
 			return true;
 		else
 			return false;
-	}
+	}*/
 }
