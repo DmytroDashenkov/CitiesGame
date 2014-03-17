@@ -1,5 +1,7 @@
 package com.madebyme.citiesgame;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener {
 
 	private String city;
 	private Button bt_ok;
@@ -22,13 +24,15 @@ public class MainActivity extends Activity implements OnClickListener{
 	private CitiesFinder citiesFinder;
 	private DBManager manager;
 	private Cursor cursor;
-	
+	private ArrayList<City> usedCities;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initComps();
-		if (!cursor.moveToFirst()){
+		manager.initCursor(cursor);
+		if (!manager.initCursor(cursor)) {
 			MyTask task = new MyTask();
 			task.execute(this);
 		}
@@ -56,8 +60,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		citiesFinder = new CitiesFinder(this);
 		bt_ok.setOnClickListener(this);
 		manager = new DBManager(this);
-		cursor = manager.database.query("Cities", null, null, null, null, null,
-				null);
+		usedCities = new ArrayList<City>();
 	}
 
 	@Override
@@ -67,22 +70,39 @@ public class MainActivity extends Activity implements OnClickListener{
 			String requestedLetter = citiesFinder.getLastLetter(city);
 			try {
 				requestedLetter = requestedLetter.toUpperCase();
-				city = manager.findCityByFirstLetter(cursor, requestedLetter);
-				tv_compCity.setText(city);
-				et_enterCity.setText(null);
+				City town = manager.findCityByFirstLetter(requestedLetter, this);
+				if (checkIfUsed(town)) {
+					Toast.makeText(this, "Было!", Toast.LENGTH_SHORT);
+					et_enterCity.setText(null);
+				} else {
+					city = town.getName();
+					tv_compCity.setText(city);
+					et_enterCity.setText(null);
+					appendCityToList(town);
+				}
 			} catch (NullPointerException e) {
-				Toast.makeText(this, "Сначала введите город!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Сначала введите город!",
+						Toast.LENGTH_SHORT).show();
 			}
-		}else{
-			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
+					.show();
+			et_enterCity.setText(null);
 		}
 
 	}
 
-	/**private boolean noMoreCitiesForThisLetterLeft(String cityName) {
-		if (cityName == null)
-			return true;
-		else
-			return false;
-	}*/
+	private ArrayList<City> appendCityToList(City city) {
+		usedCities.add(city);
+		return usedCities;
+	}
+
+	private boolean checkIfUsed(City city) {
+		for (int i = 1; i <= usedCities.size(); i++) {
+			if (usedCities.contains(city))
+				return true;
+		}
+		return false;
+	}
+
 }

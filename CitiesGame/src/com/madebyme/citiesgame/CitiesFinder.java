@@ -68,14 +68,14 @@ public class CitiesFinder {
 	String getLastLetter(String word) {
 		String letter = null;
 		try {
-			letter = word.substring(word.length() - 2, word.length() - 1);
+			letter = word.substring(word.length() - 1, word.length());
 		} catch (StringIndexOutOfBoundsException e) {
 			Log.e("Error word:", word);
 		}
 		assert letter != null;
 		if(letter == "ü" || letter == "û")
 			try {
-				letter =  word.substring(word.length() - 3, word.length() - 2);
+				letter =  word.substring(word.length() - 2, word.length() - 1);
 			} catch (StringIndexOutOfBoundsException e) {
 				Log.e("Mistake word:", word);
 			}
@@ -84,7 +84,7 @@ public class CitiesFinder {
 		return letter;
 	}
 
-	private String getFirstLetter(String word) {
+	String getFirstLetter(String word) {
 		String letter = null;
 		try {
 			letter = word.substring(0, 1);

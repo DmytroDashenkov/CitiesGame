@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class DBManager {
 
@@ -23,28 +22,30 @@ public class DBManager {
 		database.insert("Cities", null, cv);
 	}
 
-	String findCityByFirstLetter(Cursor cursor, String letter) {
-		String name = null;
-		Cursor c = database.query("Cities", null, "firstLetter = ?",
-				new String[] { letter }, null, null, null);
-		if (c.moveToFirst()) {
-			cursor = database.rawQuery(
-					"SELECT * FROM Cities WHERE firstLetter = ?",
-					new String[] { letter });
-			try {
-				name = cursor.getString(cursor.getColumnIndex("Name"));
-			} catch (IndexOutOfBoundsException e) {
-				Log.e("Error:", "Index is out of bouns!");
-			}
-		}
-
-		return name;
-	}
-
 	boolean checkCityExistans(String city) {
 		Cursor c = database.query("Cities", null, "Name = ?",
 				new String[] { city }, null, null, null);
 		return c.moveToFirst();
+	}
+
+	public boolean initCursor(Cursor cursor) {
+		cursor = database.query("Cities", null, null, null, null, null, null);
+		if (cursor.moveToFirst())
+			return true;
+		else
+			return false;
+	}
+
+	public City findCityByFirstLetter(String letter, Context context) {
+		Cursor cursor = database.rawQuery(
+				"SELECT * FROM Cities WHERE firstLetter = ?",
+				new String[] { letter });
+		cursor.moveToFirst();
+		CitiesFinder citiesFinder = new CitiesFinder(context);
+		cursor.moveToFirst();
+		String cityName = cursor.getString(cursor.getColumnIndex("Name"));
+
+		return new City(cityName, letter, citiesFinder.getLastLetter(cityName));
 	}
 
 }
