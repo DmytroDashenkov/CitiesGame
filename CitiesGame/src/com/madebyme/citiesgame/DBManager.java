@@ -36,11 +36,11 @@ public class DBManager {
 			return false;
 	}
 
-	public City findCityByFirstLetter(String letter, Context context) {
+	public City findCityByFirstLetter(String letter, Context context, int position) {
 		Cursor cursor = database.rawQuery(
 				"SELECT * FROM Cities WHERE firstLetter = ?",
 				new String[] { letter });
-		cursor.moveToFirst();
+		cursor.moveToPosition(position);
 		CitiesFinder citiesFinder = new CitiesFinder(context);
 		cursor.moveToFirst();
 		String cityName = cursor.getString(cursor.getColumnIndex("Name"));

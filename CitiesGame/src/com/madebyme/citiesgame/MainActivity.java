@@ -66,23 +66,22 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg) {
 		city = et_enterCity.getText().toString();
+		City town = new City(city, citiesFinder.getFirstLetter(city),
+				citiesFinder.getLastLetter(city));
 		if (manager.checkCityExistans(city)) {
-			String requestedLetter = citiesFinder.getLastLetter(city);
-			try {
-				requestedLetter = requestedLetter.toUpperCase();
-				City town = manager.findCityByFirstLetter(requestedLetter, this);
-				if (checkIfUsed(town)) {
-					Toast.makeText(this, "Было!", Toast.LENGTH_SHORT);
+			if (!checkIfUsed(town)) {
+				String requestedLetter = citiesFinder.getLastLetter(city);
+				try {
+					requestedLetter = requestedLetter.toUpperCase();
+					tv_compCity.setText(findAnswerCity(requestedLetter));
 					et_enterCity.setText(null);
-				} else {
-					city = town.getName();
-					tv_compCity.setText(city);
-					et_enterCity.setText(null);
-					appendCityToList(town);
+				} catch (NullPointerException e) {
+					Toast.makeText(this, "Сначала введите город!",
+							Toast.LENGTH_SHORT).show();
 				}
-			} catch (NullPointerException e) {
-				Toast.makeText(this, "Сначала введите город!",
-						Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
+				et_enterCity.setText(null);
 			}
 		} else {
 			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
@@ -103,6 +102,17 @@ public class MainActivity extends Activity implements OnClickListener {
 				return true;
 		}
 		return false;
+	}
+
+	private String findAnswerCity(String firstLetter) {
+		String name;
+		City city = manager.findCityByFirstLetter(firstLetter, this, 0);
+		for (int i = 1; checkIfUsed(city); i++) {
+			city = manager.findCityByFirstLetter(firstLetter, this, i);
+		}
+		appendCityToList(city);
+		name = city.getName();
+		return name;
 	}
 
 }
