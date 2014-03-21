@@ -1,11 +1,10 @@
 package com.madebyme.citiesgame;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +23,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	private CitiesFinder citiesFinder;
 	private DBManager manager;
 	private Cursor cursor;
-	private ArrayList<City> usedCities;
-
+	private UsedCitiesManager usedCitiesManager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,57 +59,48 @@ public class MainActivity extends Activity implements OnClickListener {
 		citiesFinder = new CitiesFinder(this);
 		bt_ok.setOnClickListener(this);
 		manager = new DBManager(this);
-		usedCities = new ArrayList<City>();
 	}
 
 	@Override
 	public void onClick(View arg) {
 		city = et_enterCity.getText().toString();
-		City town = new City(city, citiesFinder.getFirstLetter(city),
-				citiesFinder.getLastLetter(city));
-		if (manager.checkCityExistans(city)) {
-			if (!checkIfUsed(town)) {
-				String requestedLetter = citiesFinder.getLastLetter(city);
-				try {
-					requestedLetter = requestedLetter.toUpperCase();
-					tv_compCity.setText(findAnswerCity(requestedLetter));
+		Log.i("last letter:", citiesFinder.getLastLetter(city));
+			City town = new City(city, citiesFinder.getFirstLetter(city),
+					citiesFinder.getLastLetter(city));
+			if (manager.checkCityExistans(city)) {
+				if (!usedCitiesManager.checkIfUsed(town)) {
+					String requestedLetter = town.getLastLetter();
+					try {
+						requestedLetter = requestedLetter.toUpperCase();
+						String answerCity = findAnswerCity(requestedLetter);
+						tv_compCity.setText(answerCity);
+						et_enterCity.setText(null);
+					} catch (NullPointerException e) {
+						Toast.makeText(this, "Сначала введите город!",
+								Toast.LENGTH_SHORT).show();
+					}
+				} else {
+					Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
 					et_enterCity.setText(null);
-				} catch (NullPointerException e) {
-					Toast.makeText(this, "Сначала введите город!",
-							Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
+						.show();
 				et_enterCity.setText(null);
 			}
-		} else {
-			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
-					.show();
-			et_enterCity.setText(null);
-		}
-
-	}
-
-	private ArrayList<City> appendCityToList(City city) {
-		usedCities.add(city);
-		return usedCities;
-	}
-
-	private boolean checkIfUsed(City city) {
-		for (int i = 1; i <= usedCities.size(); i++) {
-			if (usedCities.contains(city))
-				return true;
-		}
-		return false;
 	}
 
 	private String findAnswerCity(String firstLetter) {
 		String name;
+		int i = 0;
 		City city = manager.findCityByFirstLetter(firstLetter, this, 0);
-		for (int i = 1; checkIfUsed(city); i++) {
+		while (true) {
 			city = manager.findCityByFirstLetter(firstLetter, this, i);
+			i++;
+			if (!usedCitiesManager.checkIfUsed(city))
+				break;
 		}
-		appendCityToList(city);
+		usedCitiesManager.inputDBFeed(city);
 		name = city.getName();
 		return name;
 	}

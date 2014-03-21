@@ -14,7 +14,6 @@ public class CitiesFinder {
 	private Context context;
 	private String allCities;
 	private String[] cities = null;
-	private final String FILE_NAME = "cities.txt";
 
 	public CitiesFinder(Context context) {
 		this.context = context;
@@ -22,7 +21,7 @@ public class CitiesFinder {
 
 	private String getAllCitiesString() throws IOException {
 		AssetManager am = context.getAssets();
-		InputStream is = am.open(FILE_NAME);
+		InputStream is = am.open(Constants.FILE_NAME);
 		allCities = convertStreamToString(is);
 		is.close();
 		return allCities;

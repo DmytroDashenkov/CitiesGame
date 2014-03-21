@@ -14,22 +14,22 @@ public class DBManager {
 		database = dbOpenHelper.getWritableDatabase();
 	}
 
-	void inputDBFeed(City model) {
+	public void inputDBFeed(City model) {
 		ContentValues cv = new ContentValues();
-		cv.put("name", model.getName());
-		cv.put("firstLetter", model.getFirstLetter());
-		cv.put("lastLetter", model.getLastLetter());
-		database.insert("Cities", null, cv);
+		cv.put(Constants.COLUMN_NAME, model.getName());
+		cv.put(Constants.COLUMN_FIRST_LETTER, model.getFirstLetter());
+		cv.put(Constants.COLUMN_LAST_LETTER, model.getLastLetter());
+		database.insert(Constants.MAIN_DB_NAME, null, cv);
 	}
 
-	boolean checkCityExistans(String city) {
-		Cursor c = database.query("Cities", null, "Name = ?",
+	public boolean checkCityExistans(String city) {
+		Cursor c = database.query(Constants.MAIN_DB_NAME, null, "Name = ?",
 				new String[] { city }, null, null, null);
 		return c.moveToFirst();
 	}
 
 	public boolean initCursor(Cursor cursor) {
-		cursor = database.query("Cities", null, null, null, null, null, null);
+		cursor = database.query(Constants.MAIN_DB_NAME, null, null, null, null, null, null);
 		if (cursor.moveToFirst())
 			return true;
 		else
@@ -43,7 +43,7 @@ public class DBManager {
 		cursor.moveToPosition(position);
 		CitiesFinder citiesFinder = new CitiesFinder(context);
 		cursor.moveToFirst();
-		String cityName = cursor.getString(cursor.getColumnIndex("Name"));
+		String cityName = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_NAME));
 
 		return new City(cityName, letter, citiesFinder.getLastLetter(cityName));
 	}
