@@ -24,7 +24,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private DBManager manager;
 	private Cursor cursor;
 	private UsedCitiesManager usedCitiesManager;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,6 +36,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			task.execute(this);
 		}
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		usedCitiesManager.deleteAll();
 	}
 
 	@Override
@@ -59,50 +65,51 @@ public class MainActivity extends Activity implements OnClickListener {
 		citiesFinder = new CitiesFinder(this);
 		bt_ok.setOnClickListener(this);
 		manager = new DBManager(this);
+		usedCitiesManager = new UsedCitiesManager(this);
 	}
 
 	@Override
 	public void onClick(View arg) {
 		city = et_enterCity.getText().toString();
-		Log.i("last letter:", citiesFinder.getLastLetter(city));
-			City town = new City(city, citiesFinder.getFirstLetter(city),
-					citiesFinder.getLastLetter(city));
-			if (manager.checkCityExistans(city)) {
-				if (!usedCitiesManager.checkIfUsed(town)) {
+		City town = new City(city, citiesFinder.getFirstLetter(city),
+				citiesFinder.getLastLetter(city));
+		Log.i("City:", city);
+		if (manager.checkCityExistans(town)) {
+			if (!usedCitiesManager.checkIfUsed(town)) {
+				try {
 					String requestedLetter = town.getLastLetter();
-					try {
-						requestedLetter = requestedLetter.toUpperCase();
-						String answerCity = findAnswerCity(requestedLetter);
-						tv_compCity.setText(answerCity);
-						et_enterCity.setText(null);
-					} catch (NullPointerException e) {
-						Toast.makeText(this, "Сначала введите город!",
-								Toast.LENGTH_SHORT).show();
-					}
-				} else {
-					Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
-					et_enterCity.setText(null);
+					requestedLetter = requestedLetter.toUpperCase();
+					String answerCity = findAnswerCity(requestedLetter);
+					usedCitiesManager.inputDBFeed(town);
+					tv_compCity.setText(answerCity);
+					et_enterCity.setText("");
+				} catch (NullPointerException e) {
+					Toast.makeText(this, e.getMessage(),
+							Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
 				et_enterCity.setText(null);
 			}
+		} else {
+			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
+					.show();
+			et_enterCity.setText(null);
+		}
 	}
 
 	private String findAnswerCity(String firstLetter) {
-		String name;
-		int i = 0;
-		City city = manager.findCityByFirstLetter(firstLetter, this, 0);
-		while (true) {
-			city = manager.findCityByFirstLetter(firstLetter, this, i);
+		City city;
+		DBManager manager = new DBManager();
+		for (int i = 0; true; i++) {
+			UsedCitiesManager usedCitiesManager = new UsedCitiesManager();
+			city = manager.findCityByFirstLetter(firstLetter, i);
 			i++;
 			if (!usedCitiesManager.checkIfUsed(city))
 				break;
 		}
 		usedCitiesManager.inputDBFeed(city);
-		name = city.getName();
-		return name;
+		return city.getName();
 	}
 
 }

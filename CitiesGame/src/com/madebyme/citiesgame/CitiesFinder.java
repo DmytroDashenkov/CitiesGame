@@ -18,6 +18,10 @@ public class CitiesFinder {
 	public CitiesFinder(Context context) {
 		this.context = context;
 	}
+	
+	public CitiesFinder() {
+	
+	}
 
 	private String getAllCitiesString() throws IOException {
 		AssetManager am = context.getAssets();
@@ -43,11 +47,10 @@ public class CitiesFinder {
 		} catch (IOException e) {
 			Log.e("error", e.getMessage());
 		}
-		Log.d("city", allCities);
 		return allCities;
 	}
 
-	void prepareDBFeed() {
+	public void prepareDBFeed() {
 		try {
 			allCities = this.getAllCitiesString();
 		} catch (IOException e) {
@@ -64,7 +67,7 @@ public class CitiesFinder {
 		return cities;
 	}
 
-	String getLastLetter(String word) {
+	public String getLastLetter(String word) {
 		String letter = null;
 		try {
 			letter = word.substring(word.length() - 1, word.length());
@@ -83,7 +86,7 @@ public class CitiesFinder {
 		return letter;
 	}
 
-	String getFirstLetter(String word) {
+	public String getFirstLetter(String word) {
 		String letter = null;
 		try {
 			letter = word.substring(0, 1);

@@ -18,7 +18,6 @@ public class UsedCitiesOpenHelper extends SQLiteOpenHelper {
 				+ Constants.COLUMN_FIRST_LETTER + " TEXT, "
 				+ Constants.COLUMN_LAST_LETTER + " TEXT);";
 		database.execSQL(query);
-		database.execSQL(query);
 	}
 
 	@Override

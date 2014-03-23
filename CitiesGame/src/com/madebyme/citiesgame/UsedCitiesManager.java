@@ -14,6 +14,10 @@ public class UsedCitiesManager {
 		database = usedCitiesOpenHelper.getWritableDatabase();
 	}
 	
+	public UsedCitiesManager() {
+	
+	}
+	
 	public void inputDBFeed(City model){
 		ContentValues cv = new ContentValues();
 		cv.put(Constants.COLUMN_NAME, model.getName());
@@ -26,6 +30,10 @@ public class UsedCitiesManager {
 		Cursor c = database.query(Constants.SUPPORTING_DB_NAME, null, "Name = ?",
 				new String[] { city.getName() }, null, null, null);
 		return c.moveToFirst();
+	}
+	
+	public void deleteAll(){
+		database.delete(Constants.SUPPORTING_DB_NAME, null, null);
 	}
 
 }
