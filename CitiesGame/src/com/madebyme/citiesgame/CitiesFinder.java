@@ -20,7 +20,7 @@ public class CitiesFinder {
 	}
 	
 	public CitiesFinder() {
-	
+		
 	}
 
 	private String getAllCitiesString() throws IOException {

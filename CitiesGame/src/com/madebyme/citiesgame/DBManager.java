@@ -43,7 +43,7 @@ public class DBManager {
 
 	public City findCityByFirstLetter(String letter, int position) {
 		Cursor cursor = database.rawQuery(
-				"SELECT * FROM Cities WHERE firstLetter = ?",
+				"SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
 				new String[] { letter });
 		cursor.moveToPosition(position);
 		CitiesFinder citiesFinder = new CitiesFinder();

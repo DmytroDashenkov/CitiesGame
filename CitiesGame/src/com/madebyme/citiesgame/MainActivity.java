@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener {
 
-	private String city;
 	private Button bt_ok;
 	private EditText et_enterCity;
 	private TextView tv_compCity;
@@ -70,22 +69,22 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View arg) {
-		city = et_enterCity.getText().toString();
+		String city = et_enterCity.getText().toString();
 		City town = new City(city, citiesFinder.getFirstLetter(city),
 				citiesFinder.getLastLetter(city));
 		Log.i("City:", city);
 		if (manager.checkCityExistans(town)) {
 			if (!usedCitiesManager.checkIfUsed(town)) {
-				try {
-					String requestedLetter = town.getLastLetter();
-					requestedLetter = requestedLetter.toUpperCase();
-					String answerCity = findAnswerCity(requestedLetter);
-					usedCitiesManager.inputDBFeed(town);
-					tv_compCity.setText(answerCity);
-					et_enterCity.setText("");
-				} catch (NullPointerException e) {
-					Toast.makeText(this, e.getMessage(),
-							Toast.LENGTH_SHORT).show();
+				try{
+				String requestedLetter = null;
+				String answerCity = null;
+				requestedLetter = town.getLastLetter().toUpperCase();
+				answerCity = findAnswerCity(requestedLetter);
+				usedCitiesManager.inputDBFeed(town);
+				tv_compCity.setText(answerCity);
+				et_enterCity.setText("");
+				}catch(NullPointerException e){
+					Toast.makeText(this, "Ñםאקאכא גגוהטעו דמנמה!", Toast.LENGTH_SHORT).show();
 				}
 			} else {
 				Toast.makeText(this, "Áûכמ!", Toast.LENGTH_SHORT).show();
@@ -98,11 +97,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private String findAnswerCity(String firstLetter) {
-		City city;
-		DBManager manager = new DBManager();
-		for (int i = 0; true; i++) {
-			UsedCitiesManager usedCitiesManager = new UsedCitiesManager();
+	private String findAnswerCity(String firstLetter) {//some fatal exception in this method
+		DBManager manager = new DBManager(this);
+		UsedCitiesManager usedCitiesManager = new UsedCitiesManager(this);
+		City city = manager.findCityByFirstLetter(firstLetter, 1);
+		for (int i = 1; true; i++) {
 			city = manager.findCityByFirstLetter(firstLetter, i);
 			i++;
 			if (!usedCitiesManager.checkIfUsed(city))
