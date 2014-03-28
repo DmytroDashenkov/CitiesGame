@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,8 +51,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent(this, HighscoresActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(this, HighscoresActivity.class));
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -70,45 +68,39 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View arg) {
 		String city = et_enterCity.getText().toString();
-		City town = new City(city, citiesFinder.getFirstLetter(city),
-				citiesFinder.getLastLetter(city));
-		Log.i("City:", city);
-		if (manager.checkCityExistans(town)) {
-			if (!usedCitiesManager.checkIfUsed(town)) {
-				try{
-				String requestedLetter = null;
-				String answerCity = null;
-				requestedLetter = town.getLastLetter().toUpperCase();
-				answerCity = findAnswerCity(requestedLetter);
-				usedCitiesManager.inputDBFeed(town);
-				tv_compCity.setText(answerCity);
-				et_enterCity.setText("");
-				}catch(NullPointerException e){
-					Toast.makeText(this, "Сначала введите город!", Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
-				et_enterCity.setText(null);
-			}
-		} else {
-			Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
-					.show();
-			et_enterCity.setText(null);
-		}
-	}
+        if(city.length() != 0){
+            City town = new City(city, citiesFinder.getFirstLetter(city));
+            if (manager.checkCityExistans(town)) {
+                if (!usedCitiesManager.checkIfUsed(town)) {
+                    String requestedLetter = town.getLastLetter().toUpperCase();
+                    String answerCity = findAnswerCity(requestedLetter);
+                    tv_compCity.setText(answerCity);
+                    et_enterCity.setText("");
+                } else {
+                    Toast.makeText(this, /**"Р‘С‹Р»Рѕ!"*/"Было!", Toast.LENGTH_SHORT).show();
+                    et_enterCity.setText(null);
+                }
+            } else {
+                Toast.makeText(this, "Такого города нет!"/**"РўР°РєРѕРіРѕ РіРѕСЂРѕРґР° РЅРµС‚!"*/, Toast.LENGTH_SHORT)
+                        .show();
+                et_enterCity.setText(null);
+            }
+        }else{
+            Toast.makeText(this, "Сначала введите город!"/**"РЎРЅР°С‡Р°Р»Р° РІРІРµРґРёС‚Рµ РіРѕСЂРѕРґ!"*/,
+                    Toast.LENGTH_SHORT).show();
 
-	private String findAnswerCity(String firstLetter) {//some fatal exception in this method
-		DBManager manager = new DBManager(this);
-		UsedCitiesManager usedCitiesManager = new UsedCitiesManager(this);
-		City city = manager.findCityByFirstLetter(firstLetter, 1);
-		for (int i = 1; true; i++) {
-			city = manager.findCityByFirstLetter(firstLetter, i);
-			i++;
-			if (!usedCitiesManager.checkIfUsed(city))
-				break;
-		}
-		usedCitiesManager.inputDBFeed(city);
-		return city.getName();
+        }
+    }
+
+    private String findAnswerCity(String firstLetter) {
+        City city;
+        int i = 0;
+        do{
+            city = manager.findCityByFirstLetter(firstLetter, i);
+            i++;
+        }while(!usedCitiesManager.checkIfUsed(city));
+
+        return city.getName();
 	}
 
 }

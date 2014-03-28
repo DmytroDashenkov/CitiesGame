@@ -13,16 +13,11 @@ public class DBManager {
 		DBOpenHelper dbOpenHelper = new DBOpenHelper(context);
 		database = dbOpenHelper.getWritableDatabase();
 	}
-
-	public DBManager() {
-
-	}
-
+	
 	public void inputDBFeed(City model) {
 		ContentValues cv = new ContentValues();
 		cv.put(Constants.COLUMN_NAME, model.getName());
 		cv.put(Constants.COLUMN_FIRST_LETTER, model.getFirstLetter());
-		cv.put(Constants.COLUMN_LAST_LETTER, model.getLastLetter());
 		database.insert(Constants.MAIN_DB_NAME, null, cv);
 	}
 
@@ -51,7 +46,7 @@ public class DBManager {
 		String cityName = cursor.getString(cursor
 				.getColumnIndex(Constants.COLUMN_NAME));
 
-		return new City(cityName, letter, citiesFinder.getLastLetter(cityName));
+		return new City(cityName, letter);
 	}
 
 }

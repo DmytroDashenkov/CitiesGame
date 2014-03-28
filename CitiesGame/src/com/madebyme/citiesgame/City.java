@@ -9,45 +9,45 @@ public class City implements Parcelable {
 	private String firstLetter;
 	private String lastLetter;
 	
-	public City(String name, String firstLetter, String lastLetter) {
-		this.setName(name);
-		this.setFirstLetter(firstLetter);
-		this.setLastLetter(lastLetter);
-	}
+    public City(String name, String firstLetter) {
+        this.setName(name);
+        this.setFirstLetter(firstLetter);
+        this.setLastLetter(lastLetter);
+    }
 	
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 	
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 	
-	public void setFirstLetter(String firstLetter) {
-		this.firstLetter = firstLetter;
-	}
+    public void setFirstLetter(String firstLetter) {
+        this.firstLetter = firstLetter;
+    }
 
-	public String getFirstLetter() {
-		return firstLetter;
-	}
+    public String getFirstLetter() {
+        return firstLetter;
+    }
 	
-	public void setLastLetter(String lastLetter) {
-		this.lastLetter = lastLetter;
-	}
+    public void setLastLetter(String lastLetter) {
+        this.lastLetter = lastLetter;
+    }
 	
-	public String getLastLetter() {
-		return lastLetter;
-	}
+    public String getLastLetter() {
+        return lastLetter;
+    }
 
-	@Override
-	public int describeContents() {
+    @Override
+    public int describeContents() {
 		
-		return 0;
-	}
+        return 0;
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
 		
-	}
-	
+    }
+
 }

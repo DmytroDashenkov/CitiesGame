@@ -18,21 +18,24 @@ public class CitiesFinder {
 	public CitiesFinder(Context context) {
 		this.context = context;
 	}
-	
+
 	public CitiesFinder() {
-		
+
 	}
 
 	private String getAllCitiesString() throws IOException {
+
 		AssetManager am = context.getAssets();
 		InputStream is = am.open(Constants.FILE_NAME);
 		allCities = convertStreamToString(is);
 		is.close();
+
 		return allCities;
 	}
 
 	private String convertStreamToString(InputStream is)
 			throws UnsupportedEncodingException {
+
 		StringBuilder stringBuilder = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		String line = null;
@@ -51,6 +54,7 @@ public class CitiesFinder {
 	}
 
 	public void prepareDBFeed() {
+
 		try {
 			allCities = this.getAllCitiesString();
 		} catch (IOException e) {
@@ -58,9 +62,13 @@ public class CitiesFinder {
 		}
 
 		cities = allCities.split("  ");
+		//Log.i("itr_count", String.valueOf(cities.length));
 		for (String oneCity : cities) {
-			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity), getLastLetter(oneCity)));
+			//long time = System.currentTimeMillis();
+			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity)));
+			//Log.i("inputTime", String.valueOf(System.currentTimeMillis() - time));
 		}
+
 	}
 
 	public String[] getCitiesArrey() {
@@ -68,22 +76,20 @@ public class CitiesFinder {
 	}
 
 	public String getLastLetter(String word) {
-		String letter = null;
+		
 		try {
-			letter = word.substring(word.length() - 1, word.length());
+			String letter = word.substring(word.length() - 1);
+			if (letter == "Ñ‹" || letter == "ÑŒ")
+
+				letter = word.substring(word.length() - 2, word.length() - 1);
+
+			if (letter == "Ñ‘")
+				letter = "Ðµ";
+			return letter;
 		} catch (StringIndexOutOfBoundsException e) {
-			Log.e("Error word:", word);
+			Log.e("Mistake word:", word);
 		}
-		assert letter != null;
-		if(letter == "ü" || letter == "û")
-			try {
-				letter =  word.substring(word.length() - 2, word.length() - 1);
-			} catch (StringIndexOutOfBoundsException e) {
-				Log.e("Mistake word:", word);
-			}
-		if(letter == "¸")
-			letter = "å";
-		return letter;
+		return "A";
 	}
 
 	public String getFirstLetter(String word) {
