@@ -20,13 +20,12 @@
     <style name="ok_style">
         <item name="android:layout_width">@dimen/ok_width</item>
         <item name="android:layout_height">@dimen/ok_height</item>
-        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginTop">@dimen/ok_margin_bottom</item>
+        <item name="android:layout_below">@+id/device_city</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">@dimen/ok_margin_bottom</item>
         <item name="android:text">@string/ok_text</item>
         <item name="android:background">@color/ok_color</item>
         <item name="android:textColor">@color/ok_text_color</item>
-        <!-- Молодец!) -->
     </style>
     
     <style name="user_city_style">
@@ -48,6 +47,14 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:text">@string/invitement</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="progress_bar_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:visibility">gone</item>
     </style>
 
 </resources>

@@ -6,18 +6,29 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/ok"
-        style="@style/ok_style" />
+            android:id="@+id/ok"
+            android:layout_width="@dimen/ok_width"
+            android:layout_height="@dimen/ok_height"
+            android:layout_marginTop="75dp"
+            android:layout_below="@+id/device_city"
+            android:layout_centerHorizontal="true"
+            android:text="@string/ok_text"
+            android:background="@color/ok_color"
+            android:textColor="@color/ok_text_color"/>
+
 
     <TextView
-        android:id="@+id/device_city"
-        style="@style/device_city_style" />
+            android:id="@+id/device_city"
+            style="@style/device_city_style" />
 
     <EditText
-        android:id="@+id/user_city"
-        style="@style/user_city_style" >
+            android:id="@+id/user_city"
+            style="@style/user_city_style" >
 
         <requestFocus />
     </EditText>
+    <ProgressBar
+            android:id="@+id/db_loading_progress"
+            style="@style/progress_bar_style"/>
 
 </RelativeLayout>

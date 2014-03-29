@@ -3,7 +3,9 @@ package com.madebyme.citiesgame;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class DBManager {
 
@@ -41,10 +43,14 @@ public class DBManager {
 				"SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
 				new String[] { letter });
 		cursor.moveToPosition(position);
-		CitiesFinder citiesFinder = new CitiesFinder();
-		cursor.moveToFirst();
-		String cityName = cursor.getString(cursor
-				.getColumnIndex(Constants.COLUMN_NAME));
+        String cityName = null;
+        try{
+            cityName = cursor.getString(cursor
+                    .getColumnIndex(Constants.COLUMN_NAME));
+        }catch(CursorIndexOutOfBoundsException e){
+            Log.e("CursorIndexOutOfBoundsException", "DBManager:findCityByFirstLetter");
+        }
+        Log.i("methods", "findCityByFistLetter() completed");
 
 		return new City(cityName, letter);
 	}

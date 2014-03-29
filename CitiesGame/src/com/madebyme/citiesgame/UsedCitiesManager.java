@@ -14,10 +14,6 @@ public class UsedCitiesManager {
 		database = usedCitiesOpenHelper.getWritableDatabase();
 	}
 	
-	public UsedCitiesManager() {
-	
-	}
-	
 	public void inputDBFeed(City model){
 		ContentValues cv = new ContentValues();
 		cv.put(Constants.COLUMN_NAME, model.getName());

@@ -19,10 +19,6 @@ public class CitiesFinder {
 		this.context = context;
 	}
 
-	public CitiesFinder() {
-
-	}
-
 	private String getAllCitiesString() throws IOException {
 
 		AssetManager am = context.getAssets();
@@ -38,7 +34,7 @@ public class CitiesFinder {
 
 		StringBuilder stringBuilder = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		String line = null;
+		String line;
 		try {
 			while (true) {
 				line = reader.readLine();
@@ -71,10 +67,6 @@ public class CitiesFinder {
 
 	}
 
-	public String[] getCitiesArrey() {
-		return cities;
-	}
-
 	public String getLastLetter(String word) {
 		
 		try {
@@ -85,6 +77,7 @@ public class CitiesFinder {
 
 			if (letter == "ё")
 				letter = "е";
+            Log.i("methods", "getLastLetter() ok");
 			return letter;
 		} catch (StringIndexOutOfBoundsException e) {
 			Log.e("Mistake word:", word);
