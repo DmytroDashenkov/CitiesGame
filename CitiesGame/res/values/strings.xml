@@ -7,5 +7,7 @@
     <string name="invitement">Ваш ход!</string>
     <string name="hint">Введите город</string>
     <string name="highscores">Рекорды</string>
+    <string name="newgame">Новая игра!</string>
+    <string name="you_win_message">Вы победили!</string>
 
 </resources>

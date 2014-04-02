@@ -1,9 +1,10 @@
 package com.madebyme.citiesgame;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,16 +12,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-public class MainActivity extends Activity implements OnClickListener, OnDataLoadedListener {
+public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogListener {
 
     private Button bt_ok;
     private EditText et_enterCity;
     private TextView tv_compCity;
+    private Button bt_newGame;
     private CitiesFinder citiesFinder;
     private DBManager manager;
     private Cursor cursor;
     private UsedCitiesManager usedCitiesManager;
     private ProgressBar pb_dbLoadingBar;
+    private String lastCity;
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +36,15 @@ public class MainActivity extends Activity implements OnClickListener, OnDataLoa
             MyTask task = new MyTask(this);
             task.execute(this);
         }
-
+        lastCity = loadLastCityFromPreferences();
+        if(lastCity != null)
+            tv_compCity.setText(lastCity);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        usedCitiesManager.deleteAll();
+        saveLastCityInPreference(lastCity);
     }
 
     @Override
@@ -59,37 +65,23 @@ public class MainActivity extends Activity implements OnClickListener, OnDataLoa
         et_enterCity = (EditText) findViewById(R.id.user_city);
         tv_compCity = (TextView) findViewById(R.id.device_city);
         pb_dbLoadingBar = (ProgressBar) findViewById(R.id.db_loading_progress);
+        bt_newGame = (Button) findViewById(R.id.bt_new_game);
         citiesFinder = new CitiesFinder(this);
         bt_ok.setOnClickListener(this);
+        bt_newGame.setOnClickListener(this);
         manager = new DBManager(this);
         usedCitiesManager = new UsedCitiesManager(this);
     }
 
     @Override
-    public void onClick(View arg) {
-        String city = et_enterCity.getText().toString();
-        if (city.length() != 0) {
-            City town = new City(city, citiesFinder.getFirstLetter(city));
-            if (manager.checkCityExistans(town)) {
-                if (!usedCitiesManager.checkIfUsed(town)) {
-                    usedCitiesManager.inputDBFeed(town);
-                    String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
-                    String answerCity = findAnswerCity(requestedLetter);
-                    tv_compCity.setText(answerCity);
-                    et_enterCity.setText("");
-                } else {
-                    Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
-                    et_enterCity.setText(null);
-                }
-            } else {
-                Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
-                        .show();
-                et_enterCity.setText(null);
-            }
-        } else {
-            Toast.makeText(this, "Сначала введите город!",
-                    Toast.LENGTH_SHORT).show();
-
+    public void onClick(View src) {
+        switch (src.getId()){
+            case R.id.ok:
+                onButtonOkClicked();
+                break;
+            case R.id.bt_new_game:
+                onNewGameStarted();
+                break;
         }
     }
 
@@ -101,7 +93,6 @@ public class MainActivity extends Activity implements OnClickListener, OnDataLoa
             i++;
         } while (usedCitiesManager.checkIfUsed(city));
         usedCitiesManager.inputDBFeed(city);
-        Log.i("methods", "findAnswerCity() completed");
 
         return city.getName();
     }
@@ -119,5 +110,79 @@ public class MainActivity extends Activity implements OnClickListener, OnDataLoa
             tv_compCity.setVisibility(View.INVISIBLE);
             pb_dbLoadingBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void saveLastCityInPreference(String city){
+        pref = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("Last Called City", city);
+        editor.commit();
+        Log.i("pref", "city saved");
+    }
+
+    private String loadLastCityFromPreferences(){
+        pref = getPreferences(MODE_PRIVATE);
+        String lastCityUsed = pref.getString("Last Called City", "");
+        Log.i("pref", "city loaded");
+        return lastCityUsed;
+    }
+
+    private void onNewGameStarted(){
+        usedCitiesManager.deleteAll();
+        tv_compCity.setText("Ваш ход!");
+        lastCity = null;
+        et_enterCity.setText("");
+    }
+
+    private boolean checkIfGameIsFinished(String lastUsedCity){
+        if(lastUsedCity != null){
+            String letter = citiesFinder.getLastLetter(lastUsedCity).toUpperCase();
+            return manager.compereTablesOfUsedAndGeneral(letter, this);
+        }else{
+            return false;
+        }
+    }
+
+    private void onButtonOkClicked(){
+        String city = et_enterCity.getText().toString();
+        if (city.length() != 0) {
+            City town = new City(city, citiesFinder.getFirstLetter(city));
+            if (manager.checkCityExistans(town)) {
+                if (!usedCitiesManager.checkIfUsed(town)) {
+                    if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
+                        if(!checkIfGameIsFinished(lastCity)){
+                            usedCitiesManager.inputDBFeed(town);
+                            String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
+                            String answerCity = findAnswerCity(requestedLetter);
+                            lastCity = answerCity;
+                            tv_compCity.setText(answerCity);
+                            et_enterCity.setText("");
+                        }else{
+                            MyDialog dialog = new MyDialog(this);
+                            dialog.show(getSupportFragmentManager(), "Dialog fragment");
+                        }
+                    }else{
+                        Toast.makeText(this, "Не та буква!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
+                    et_enterCity.setText(null);
+                }
+            } else {
+                Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
+                        .show();
+                et_enterCity.setText(null);
+            }
+        } else {
+            Toast.makeText(this, "Сначала введите город!",
+                    Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+
+    @Override
+    public void onClickDialogButton() {
+        onNewGameStarted();
     }
 }

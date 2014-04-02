@@ -34,15 +34,15 @@ public class DBManager {
 				null, null);
 		if (cursor.moveToFirst())
 			return true;
-		else
-			return false;
-	}
+        else
+            return false;
+    }
 
-	public City findCityByFirstLetter(String letter, int position) {
-		Cursor cursor = database.rawQuery(
-				"SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
-				new String[] { letter });
-		cursor.moveToPosition(position);
+    public City findCityByFirstLetter(String letter, int position) {
+        Cursor cursor = database.rawQuery(
+                "SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
+                new String[] { letter });
+        cursor.moveToPosition(position);
         String cityName = null;
         try{
             cityName = cursor.getString(cursor
@@ -50,9 +50,20 @@ public class DBManager {
         }catch(CursorIndexOutOfBoundsException e){
             Log.e("CursorIndexOutOfBoundsException", "DBManager:findCityByFirstLetter");
         }
-        Log.i("methods", "findCityByFistLetter() completed");
+        return new City(cityName, letter);
+    }
 
-		return new City(cityName, letter);
-	}
-
+    public boolean compereTablesOfUsedAndGeneral(String letter, Context context){
+        Cursor used = database.rawQuery(
+                "SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
+                new String[] { letter });
+        UsedCitiesManager usedCitiesManager = new UsedCitiesManager(context);
+        Cursor general = usedCitiesManager.getDatabase().rawQuery(
+                "SELECT * FROM " + Constants.SUPPORTING_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
+                new String[] { letter });
+        if(used.getCount() == general.getCount())
+            return true;
+        else
+            return false;
+    }
 }

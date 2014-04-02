@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class UsedCitiesManager {
 	
-	SQLiteDatabase database;
+	private SQLiteDatabase database;
 	
 	public UsedCitiesManager(Context context){
 		UsedCitiesOpenHelper usedCitiesOpenHelper = new UsedCitiesOpenHelper(context);
@@ -31,5 +31,9 @@ public class UsedCitiesManager {
 	public void deleteAll(){
 		database.delete(Constants.SUPPORTING_DB_NAME, null, null);
 	}
+
+    public SQLiteDatabase getDatabase(){
+        return database;
+    }
 
 }

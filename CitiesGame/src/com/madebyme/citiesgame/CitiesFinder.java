@@ -58,26 +58,20 @@ public class CitiesFinder {
 		}
 
 		cities = allCities.split("  ");
-		//Log.i("itr_count", String.valueOf(cities.length));
 		for (String oneCity : cities) {
-			//long time = System.currentTimeMillis();
 			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity)));
-			//Log.i("inputTime", String.valueOf(System.currentTimeMillis() - time));
 		}
 
 	}
 
 	public String getLastLetter(String word) {
-		
 		try {
 			String letter = word.substring(word.length() - 1);
 			if (letter == "ы" || letter == "ь")
-
 				letter = word.substring(word.length() - 2, word.length() - 1);
 
 			if (letter == "ё")
 				letter = "е";
-            Log.i("methods", "getLastLetter() ok");
 			return letter;
 		} catch (StringIndexOutOfBoundsException e) {
 			Log.e("Mistake word:", word);
