@@ -7,6 +7,8 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.Random;
+
 public class DBManager {
 
 	SQLiteDatabase database;
@@ -38,11 +40,12 @@ public class DBManager {
             return false;
     }
 
-    public City findCityByFirstLetter(String letter, int position) {
+    public City findCityByFirstLetter(String letter) {
         Cursor cursor = database.rawQuery(
                 "SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[] { letter });
-        cursor.moveToPosition(position);
+        Random r = new Random();
+        cursor.moveToPosition(r.nextInt(cursor.getCount()));
         String cityName = null;
         try{
             cityName = cursor.getString(cursor

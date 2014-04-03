@@ -67,10 +67,10 @@ public class CitiesFinder {
 	public String getLastLetter(String word) {
 		try {
 			String letter = word.substring(word.length() - 1);
-			if (letter == "ы" || letter == "ь")
+			if (letter.equals("ы") || letter.equals("ь"))
 				letter = word.substring(word.length() - 2, word.length() - 1);
 
-			if (letter == "ё")
+			if (letter.equals("ё"))
 				letter = "е";
 			return letter;
 		} catch (StringIndexOutOfBoundsException e) {

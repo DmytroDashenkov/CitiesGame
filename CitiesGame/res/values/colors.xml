@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_color">#BBBBFF</color>
+    <color name="bg_color">#BBF</color>
     <color name="ok_color">#228</color>
     <color name="ok_text_color">#FFF</color>
     <color name="user_city_color">#EEF</color>
     <color name="new_game_button_color">#99F</color>
+    <color name="clicked">#FFF</color>
+    <color name="text_clicked">#000</color>
     
 </resources>

@@ -13,7 +13,7 @@
             android:layout_below="@+id/device_city"
             android:layout_centerHorizontal="true"
             android:text="@string/ok_text"
-            android:background="@color/ok_color"
+            android:background="@drawable/selector"
             android:textColor="@color/ok_text_color"/>
 
 
@@ -37,6 +37,6 @@
             android:id="@+id/bt_new_game" android:layout_below="@+id/db_loading_progress"
             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
-            android:background="@color/new_game_button_color"/>
+            android:background="@drawable/new_game_selector"/>
 
 </RelativeLayout>

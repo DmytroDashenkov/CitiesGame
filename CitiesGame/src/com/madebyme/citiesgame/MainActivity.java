@@ -87,10 +87,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     private String findAnswerCity(String firstLetter) {
         City city;
-        int i = 0;
         do {
-            city = manager.findCityByFirstLetter(firstLetter, i);
-            i++;
+            city = manager.findCityByFirstLetter(firstLetter);
         } while (usedCitiesManager.checkIfUsed(city));
         usedCitiesManager.inputDBFeed(city);
 
