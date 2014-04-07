@@ -132,7 +132,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     }
 
     private boolean checkIfGameIsFinished(String lastUsedCity){
-        if(!lastUsedCity.equals("")){
+        if(lastUsedCity != null){
             String letter = citiesFinder.getLastLetter(lastUsedCity).toUpperCase();
             return manager.compereTablesOfUsedAndGeneral(letter, this);
         }else{
@@ -146,7 +146,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             City town = new City(city, citiesFinder.getFirstLetter(city));
             if (manager.checkCityExistans(town)) {
                 if (!usedCitiesManager.checkIfUsed(town)) {
-                    if(lastCity.equals("") || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
+                    if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
                         if(!checkIfGameIsFinished(lastCity)){
                             usedCitiesManager.inputDBFeed(town);
                             String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
