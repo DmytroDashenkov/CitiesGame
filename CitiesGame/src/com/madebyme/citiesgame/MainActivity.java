@@ -5,14 +5,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 
-public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogListener {
+public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogButtonListener{
 
     private Button bt_ok;
     private EditText et_enterCity;
@@ -25,6 +24,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private ProgressBar pb_dbLoadingBar;
     private String lastCity;
     private SharedPreferences pref;
+    private MyDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +37,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             task.execute(this);
         }
         lastCity = loadLastCityFromPreferences();
-        if(lastCity != null)
+        if(!lastCity.equals(""))
             tv_compCity.setText(lastCity);
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         saveLastCityInPreference(lastCity);
     }
 
@@ -71,6 +71,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         bt_newGame.setOnClickListener(this);
         manager = new DBManager(this);
         usedCitiesManager = new UsedCitiesManager(this);
+        dialog = new MyDialog(this);
     }
 
     @Override
@@ -115,13 +116,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("Last Called City", city);
         editor.commit();
-        Log.i("pref", "city saved");
     }
 
     private String loadLastCityFromPreferences(){
         pref = getPreferences(MODE_PRIVATE);
         String lastCityUsed = pref.getString("Last Called City", "");
-        Log.i("pref", "city loaded");
         return lastCityUsed;
     }
 
@@ -133,7 +132,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     }
 
     private boolean checkIfGameIsFinished(String lastUsedCity){
-        if(lastUsedCity != null){
+        if(!lastUsedCity.equals("")){
             String letter = citiesFinder.getLastLetter(lastUsedCity).toUpperCase();
             return manager.compereTablesOfUsedAndGeneral(letter, this);
         }else{
@@ -147,7 +146,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
             City town = new City(city, citiesFinder.getFirstLetter(city));
             if (manager.checkCityExistans(town)) {
                 if (!usedCitiesManager.checkIfUsed(town)) {
-                    if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
+                    if(lastCity.equals("") || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
                         if(!checkIfGameIsFinished(lastCity)){
                             usedCitiesManager.inputDBFeed(town);
                             String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
@@ -156,7 +155,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                             tv_compCity.setText(answerCity);
                             et_enterCity.setText("");
                         }else{
-                            MyDialog dialog = new MyDialog(this);
                             dialog.show(getSupportFragmentManager(), "Dialog fragment");
                         }
                     }else{
@@ -178,9 +176,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         }
     }
 
-
     @Override
-    public void onClickDialogButton() {
+    public void onDialogButtonClick() {
         onNewGameStarted();
     }
 }
