@@ -1,8 +1,9 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.maindb;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.madebyme.citiesgame.Constants;
 
 public class DBOpenHelper extends SQLiteOpenHelper {
 

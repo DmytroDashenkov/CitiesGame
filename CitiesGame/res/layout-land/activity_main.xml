@@ -1,20 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_color"
-    tools:context=".MainActivity" >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_color"
+                tools:context=".MainActivity" >
 
     <com.madebyme.citiesgame.views.MyButton
             android:id="@+id/ok"
             android:layout_width="@dimen/ok_width"
             android:layout_height="@dimen/ok_height"
-            android:layout_marginTop="75dp"
-            android:layout_below="@+id/device_city"
-            android:layout_centerHorizontal="true"
             android:text="@string/ok_text"
             android:background="@drawable/selector"
-            android:textColor="@color/ok_text_color"/>
+            android:textColor="@color/ok_text_color"
+            android:layout_marginLeft="41dp"
+            android:layout_marginTop="21dp"
+            android:layout_below="@+id/bt_new_game"
+            android:layout_toRightOf="@+id/user_city"/>
 
 
     <com.madebyme.citiesgame.views.MyTextView
@@ -23,7 +26,9 @@
 
     <com.madebyme.citiesgame.views.MyEditText
             android:id="@+id/user_city"
-            style="@style/user_city_style" >
+            style="@style/user_city_style"
+            android:layout_alignBaseline="@+id/ok" android:layout_alignBottom="@+id/ok"
+            android:layout_centerHorizontal="true">
 
         <requestFocus />
     </com.madebyme.citiesgame.views.MyEditText>
@@ -35,8 +40,10 @@
             android:layout_height="wrap_content"
             android:text="@string/newgame"
             android:id="@+id/bt_new_game"
-            android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:background="@drawable/new_game_selector"/>
 
     <com.madebyme.citiesgame.views.MyTextView

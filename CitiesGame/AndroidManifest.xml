@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.madebyme.citiesgame.MainActivity"
+            android:name=".activitiesandfragments.activities.MainActivity"
             android:label="@string/app_name" 
             >
             <intent-filter>
@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="HighscoresActivity"></activity>
+        <activity android:name=".activitiesandfragments.activities.HighscoresActivity"></activity>
     </application>
 
 </manifest>

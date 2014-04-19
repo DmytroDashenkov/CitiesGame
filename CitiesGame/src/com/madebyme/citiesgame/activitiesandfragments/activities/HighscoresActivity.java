@@ -1,7 +1,8 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.activitiesandfragments.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.madebyme.citiesgame.R;
 
 public class HighscoresActivity extends Activity {
 	

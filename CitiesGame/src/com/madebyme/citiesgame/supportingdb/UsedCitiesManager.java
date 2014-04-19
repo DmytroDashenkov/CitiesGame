@@ -1,9 +1,11 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.supportingdb;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.madebyme.citiesgame.City;
+import com.madebyme.citiesgame.Constants;
 
 public class UsedCitiesManager {
 	

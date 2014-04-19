@@ -1,4 +1,4 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.maindb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,9 @@ import java.io.UnsupportedEncodingException;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
+import com.madebyme.citiesgame.App;
+import com.madebyme.citiesgame.City;
+import com.madebyme.citiesgame.Constants;
 
 public class CitiesFinder {
 	private Context context;

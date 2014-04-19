@@ -1,4 +1,4 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.maindb;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import com.madebyme.citiesgame.City;
+import com.madebyme.citiesgame.Constants;
+import com.madebyme.citiesgame.supportingdb.UsedCitiesManager;
 
 import java.util.Random;
 

@@ -13,5 +13,6 @@ public class Constants {
 	public static final int SUPPORTING_DB_VERSION = 1;
 	
 	public static final String FILE_NAME = "cities.txt";
+    public static final String FONT_FILE_MAME = "font.ttf";
 
 }

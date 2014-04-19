@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-   <TextView
+
+   <com.madebyme.citiesgame.views.MyTextView
+           android:id="@+id/game_over"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_gravity="center"
-           android:layout_margin="@dimen/dialog_tv_layout_magin"
-           android:text="@string/you_win_message"
+           android:text="@string/game_over_text"
            android:textAppearance="?android:attr/textAppearanceLarge"
-           />
-    <Button
+           android:layout_marginTop="45dp" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+   <com.madebyme.citiesgame.views.MyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/score"
+            android:text="a"
+            android:layout_marginTop="28dp" android:layout_below="@+id/game_over"
+            android:layout_centerHorizontal="true"/>
+   <com.madebyme.citiesgame.views.MyButton
             android:id="@+id/dialog_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/ok_text"
-            />
+            android:layout_marginTop="94dp" android:layout_below="@+id/score" android:layout_centerHorizontal="true"/>
 
-</LinearLayout>
+</RelativeLayout>

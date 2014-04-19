@@ -1,10 +1,10 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.tasks;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
+import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
+import com.madebyme.citiesgame.maindb.CitiesFinder;
 
 public class MyTask extends AsyncTask<Context, Void, Void> {
 
