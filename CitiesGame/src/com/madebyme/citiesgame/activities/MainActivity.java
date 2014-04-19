@@ -1,4 +1,4 @@
-package com.madebyme.citiesgame.activitiesandfragments.activities;
+package com.madebyme.citiesgame.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.madebyme.citiesgame.*;
-import com.madebyme.citiesgame.activitiesandfragments.fragments.MyDialog;
+import com.madebyme.citiesgame.activities.HighscoresActivity;
+import com.madebyme.citiesgame.fragments.MyDialog;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.maindb.CitiesFinder;
@@ -35,7 +36,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private ProgressBar pbDbLoadingBar;
     private String lastCity;
     private SharedPreferences pref;
-    private MyDialog dialog;
     private MyTextView tvWaitPlease;
     private int score;
 
@@ -87,7 +87,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         btNewGame.setOnClickListener(this);
         manager = App.getDBManager();
         usedCitiesManager = new UsedCitiesManager(this);
-        dialog = MyDialog.newInstance(this);
         score = 0;
     }
 
@@ -147,14 +146,15 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     }
 
     private void onNewGameStarted(boolean shouldCallDialog){
+        if(shouldCallDialog)
+            callDialog();
         usedCitiesManager.deleteAll();
         tvCompCity.setText("Ваш ход!");
         lastCity = null;
         score = 0;
         etEnterCity.setText("");
-        saveScore();
-        if(shouldCallDialog)
-            dialog.show(getSupportFragmentManager(), "Dialog fragment");
+
+
     }
 
     private boolean checkIfGameIsFinished(String lastUsedCity){
@@ -182,7 +182,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                                 etEnterCity.setText("");
                                 score++;
                             }else{
-                                dialog.show(getSupportFragmentManager(), "Dialog fragment");
+
                             }
                         }else{
                         Toast.makeText(this, "Не та буква!", Toast.LENGTH_SHORT).show();
@@ -208,10 +208,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         onNewGameStarted(false);
     }
 
-    private void saveScore(){
+    private void callDialog(){
+        MyDialog dialog = MyDialog.newInstance(this);
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
         dialog.setArguments(bundle);
-
+        dialog.show(getSupportFragmentManager(), "Dialog fragment");
     }
 }

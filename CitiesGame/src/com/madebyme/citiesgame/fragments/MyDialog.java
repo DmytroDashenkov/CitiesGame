@@ -1,11 +1,10 @@
-package com.madebyme.citiesgame.activitiesandfragments.fragments;
+package com.madebyme.citiesgame.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.views.MyButton;
@@ -29,7 +28,7 @@ public class MyDialog extends DialogFragment implements View.OnClickListener {
         bt_ok = (MyButton) v.findViewById(R.id.dialog_ok);
         bt_ok.setOnClickListener(this);
         tvScore = (MyTextView) v.findViewById(R.id.score);
-        tvScore.setText(bundle.getInt("score", 0));
+        tvScore.setText(String.valueOf(bundle.getInt("score", 0)));
         return v;
     }
 

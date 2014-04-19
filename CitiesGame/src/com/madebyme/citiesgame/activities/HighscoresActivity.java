@@ -1,4 +1,4 @@
-package com.madebyme.citiesgame.activitiesandfragments.activities;
+package com.madebyme.citiesgame.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
