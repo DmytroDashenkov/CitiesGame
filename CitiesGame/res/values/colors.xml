@@ -7,5 +7,6 @@
     <color name="new_game_button_color">#99F</color>
     <color name="clicked">#FFF</color>
     <color name="text_clicked">#000</color>
+    <color name="no_scores_massage">#55F</color>
     
 </resources>

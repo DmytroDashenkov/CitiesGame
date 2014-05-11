@@ -8,5 +8,6 @@
     <dimen name="ok_margin_bottom">100dp</dimen>
     <dimen name="user_city_margin_bottom">70dp</dimen>
     <dimen name="dialog_tv_layout_margin">20dp</dimen>
+    <dimen name="user_name_margin_top">42dp</dimen>
 
 </resources>

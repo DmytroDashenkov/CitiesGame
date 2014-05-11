@@ -10,5 +10,7 @@
     <string name="newgame">Новая игра!</string>
     <string name="game_over_text">Игра окончена! Счет:</string>
     <string name="wait_please">Загрузка базы данных…</string>
+    <string name="user_name_hint">Введите имя</string>
+    <string name="no_high_scores">У Вас пока нет рекордов</string>
 
 </resources>

@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.madebyme.citiesgame.*;
-import com.madebyme.citiesgame.activities.HighscoresActivity;
 import com.madebyme.citiesgame.fragments.MyDialog;
+import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.maindb.CitiesFinder;
@@ -23,6 +23,9 @@ import com.madebyme.citiesgame.views.MyButton;
 import com.madebyme.citiesgame.views.MyEditText;
 import com.madebyme.citiesgame.views.MyTextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogButtonListener {
 
     private MyButton btOk;
@@ -31,21 +34,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private MyButton btNewGame;
     private CitiesFinder citiesFinder;
     private DBManager manager;
-    private Cursor cursor;
     private UsedCitiesManager usedCitiesManager;
     private ProgressBar pbDbLoadingBar;
     private String lastCity;
     private SharedPreferences pref;
     private MyTextView tvWaitPlease;
     private int score;
+    private MyDialog dialog;
+    private HighScoresDBManager highScoresDBManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComps();
-        manager.initCursor(cursor);
-        if (!manager.initCursor(cursor)) {
+        App.getHighScoresDBManager().delete();
+        manager.initCursor();
+        if (!manager.initCursor()) {
             MyTask task = new MyTask(this);
             task.execute(this);
         }
@@ -53,7 +58,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         if(lastCity.length() != 0)
             tvCompCity.setText(lastCity);
         else
-            onNewGameStarted(false);
+            onNewGameStarted(false, false);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        startActivity(new Intent(this, HighscoresActivity.class));
+        startActivity(new Intent(this, HighScoresActivity.class));
         return super.onOptionsItemSelected(item);
     }
 
@@ -86,8 +91,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         btOk.setOnClickListener(this);
         btNewGame.setOnClickListener(this);
         manager = App.getDBManager();
-        usedCitiesManager = new UsedCitiesManager(this);
+        usedCitiesManager = App.getUsedCitiesManager();
         score = 0;
+        dialog = MyDialog.newInstance(this);
+        highScoresDBManager = App.getHighScoresDBManager();
     }
 
     @Override
@@ -97,7 +104,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 onButtonOkClicked();
                 break;
             case R.id.bt_new_game:
-                onNewGameStarted(true);
+                onNewGameStarted(true, false);
                 break;
         }
     }
@@ -145,9 +152,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         return pref.getString("Last Called City", "");
     }
 
-    private void onNewGameStarted(boolean shouldCallDialog){
-        if(shouldCallDialog)
-            callDialog();
+    private void onNewGameStarted(boolean shouldCallDialog, boolean userWin){
+        if(shouldCallDialog){
+            callDialog(userWin);
+        }
         usedCitiesManager.deleteAll();
         tvCompCity.setText("Ваш ход!");
         lastCity = null;
@@ -160,7 +168,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private boolean checkIfGameIsFinished(String lastUsedCity){
         if(lastUsedCity != null){
             String letter = citiesFinder.getLastLetter(lastUsedCity).toUpperCase();
-            return manager.compereTablesOfUsedAndGeneral(letter, this);
+            return manager.compereTablesOfUsedAndGeneral(letter);
         }else{
             return false;
         }
@@ -170,7 +178,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         String city = etEnterCity.getText().toString();
         if (city.length() != 0) {
             City town = new City(city, citiesFinder.getFirstLetter(city));
-            if (manager.checkCityExistans(town)) {
+            if (manager.checkCityExistance(town)) {
                 if (!usedCitiesManager.checkIfUsed(town)) {
                         if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
                             if(!checkIfGameIsFinished(lastCity)){
@@ -182,7 +190,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                                 etEnterCity.setText("");
                                 score++;
                             }else{
-
+                                onNewGameStarted(true, true);
                             }
                         }else{
                         Toast.makeText(this, "Не та буква!", Toast.LENGTH_SHORT).show();
@@ -205,14 +213,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     @Override
     public void onDialogButtonClick() {
-        onNewGameStarted(false);
+        onNewGameStarted(false, false);
+
     }
 
-    private void callDialog(){
-        MyDialog dialog = MyDialog.newInstance(this);
+    private void callDialog(boolean userWin){
+        if(userWin)
+            score = score + 100;
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "Dialog fragment");
+
     }
 }

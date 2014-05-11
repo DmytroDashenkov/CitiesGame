@@ -16,9 +16,8 @@ import com.madebyme.citiesgame.Constants;
 public class CitiesFinder {
 	private Context context;
 	private String allCities;
-	private String[] cities = null;
 
-	public CitiesFinder(Context context) {
+    public CitiesFinder(Context context) {
 		this.context = context;
 	}
 
@@ -44,8 +43,9 @@ public class CitiesFinder {
 				if (line == null) {
 					break;
 				}
-				allCities = stringBuilder.append(line).toString();
+				stringBuilder.append(line);
 			}
+            allCities = stringBuilder.toString();
 		} catch (IOException e) {
 			Log.e("error", e.getMessage());
 		}
@@ -60,11 +60,12 @@ public class CitiesFinder {
 			Log.e("Error:", e.getMessage());
 		}
 
-		cities = allCities.split("  ");
+        String[] cities = allCities.split("  ");
 		for (String oneCity : cities) {
 			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity)));
+            Log.d("inputDBFeed()", "ready");
 		}
-
+        Log.d("prepareDBFeed()", "ready");
 	}
 
 	public String getLastLetter(String word) {

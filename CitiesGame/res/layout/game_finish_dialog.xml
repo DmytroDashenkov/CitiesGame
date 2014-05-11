@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/score"
-            android:text="a"
             android:layout_marginTop="28dp" android:layout_below="@+id/game_over"
             android:layout_centerHorizontal="true"/>
    <com.madebyme.citiesgame.views.MyButton
@@ -26,5 +25,18 @@
             android:layout_gravity="center"
             android:text="@string/ok_text"
             android:layout_marginTop="94dp" android:layout_below="@+id/score" android:layout_centerHorizontal="true"/>
+    <com.madebyme.citiesgame.views.MyEditText
+            android:layout_width="wrap_content"
+            android:hint="@string/user_name_hint"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/user_name"
+            android:layout_below="@+id/score"
+            android:layout_alignRight="@+id/game_over"
+            android:layout_alignEnd="@+id/game_over"
+            android:layout_marginTop="@dimen/user_name_margin_top"
+            android:layout_alignLeft="@+id/game_over"
+            android:layout_alignStart="@+id/game_over"/>
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.City;
 import com.madebyme.citiesgame.Constants;
 import com.madebyme.citiesgame.supportingdb.UsedCitiesManager;
@@ -28,19 +29,16 @@ public class DBManager {
 		database.insert(Constants.MAIN_DB_NAME, null, cv);
 	}
 
-	public boolean checkCityExistans(City city) {
+	public boolean checkCityExistance(City city) {
 		Cursor c = database.query(Constants.MAIN_DB_NAME, null, "Name = ?",
 				new String[] { city.getName() }, null, null, null);
 		return c.moveToFirst();
 	}
 
-	public boolean initCursor(Cursor cursor) {
-		cursor = database.query(Constants.MAIN_DB_NAME, null, null, null, null,
-				null, null);
-		if (cursor.moveToFirst())
-			return true;
-        else
-            return false;
+	public boolean initCursor() {
+        Cursor cursor = database.query(Constants.MAIN_DB_NAME, null, null, null, null,
+                null, null);
+        return cursor.moveToFirst();
     }
 
     public City findCityByFirstLetter(String letter) {
@@ -54,22 +52,19 @@ public class DBManager {
             cityName = cursor.getString(cursor
                     .getColumnIndex(Constants.COLUMN_NAME));
         }catch(CursorIndexOutOfBoundsException e){
-            Log.e("CursorIndexOutOfBoundsException", "DBManager:findCityByFirstLetter");
+            Log.e("error" ,e.getMessage());
         }
         return new City(cityName, letter);
     }
 
-    public boolean compereTablesOfUsedAndGeneral(String letter, Context context){
+    public boolean compereTablesOfUsedAndGeneral(String letter){
         Cursor used = database.rawQuery(
                 "SELECT * FROM " + Constants.MAIN_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[] { letter });
-        UsedCitiesManager usedCitiesManager = new UsedCitiesManager(context);
+        UsedCitiesManager usedCitiesManager = App.getUsedCitiesManager();
         Cursor general = usedCitiesManager.getDatabase().rawQuery(
                 "SELECT * FROM " + Constants.SUPPORTING_DB_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[] { letter });
-        if(used.getCount() == general.getCount())
-            return true;
-        else
-            return false;
+        return used.getCount() == general.getCount();//TODO ask if this is really good way to
     }
 }
