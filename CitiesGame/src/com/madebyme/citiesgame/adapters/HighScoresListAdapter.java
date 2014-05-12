@@ -7,7 +7,6 @@ import android.widget.BaseAdapter;
 import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.GameSave;
 import com.madebyme.citiesgame.R;
-import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
 import com.madebyme.citiesgame.views.MyTextView;
 
 import java.util.ArrayList;
@@ -25,10 +24,6 @@ public class HighScoresListAdapter extends BaseAdapter{
 
     public ArrayList<GameSave> getSaves(){
         return saves;
-    }
-
-    public void setSaves(ArrayList<GameSave> saves){
-        this.saves = saves;
     }
 
     @Override
@@ -68,13 +63,14 @@ public class HighScoresListAdapter extends BaseAdapter{
         }
         else{
             holder = (ViewHolder)v.getTag();
-            GameSave gameSave = saves.get(position);
-            holder.tvUserName.setText(gameSave.getName());
-            holder.tvScore.setText(new StringBuilder().append("Счет: ")
-                                    .append(String.valueOf(gameSave.getScore()))
-                                    .toString());
-            holder.tvDate.setText(gameSave.getDate());
         }
+
+        GameSave gameSave = saves.get(position);
+        holder.tvUserName.setText(gameSave.getName());
+        holder.tvScore.setText(new StringBuilder().append("Счет: ")
+                .append(String.valueOf(gameSave.getScore()))
+                .toString());
+        holder.tvDate.setText(gameSave.getDate());
 
         return v;
     }

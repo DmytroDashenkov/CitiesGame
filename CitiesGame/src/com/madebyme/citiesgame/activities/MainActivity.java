@@ -2,7 +2,6 @@ package com.madebyme.citiesgame.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -12,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import com.madebyme.citiesgame.*;
 import com.madebyme.citiesgame.fragments.MyDialog;
-import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.maindb.CitiesFinder;
@@ -22,9 +20,6 @@ import com.madebyme.citiesgame.tasks.MyTask;
 import com.madebyme.citiesgame.views.MyButton;
 import com.madebyme.citiesgame.views.MyEditText;
 import com.madebyme.citiesgame.views.MyTextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogButtonListener {
 
@@ -41,7 +36,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private MyTextView tvWaitPlease;
     private int score;
     private MyDialog dialog;
-    private HighScoresDBManager highScoresDBManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +88,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         usedCitiesManager = App.getUsedCitiesManager();
         score = 0;
         dialog = MyDialog.newInstance(this);
-        highScoresDBManager = App.getHighScoresDBManager();
     }
 
     @Override

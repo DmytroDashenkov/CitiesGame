@@ -9,22 +9,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.madebyme.citiesgame.App;
-import com.madebyme.citiesgame.GameSave;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.adapters.HighScoresListAdapter;
 import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
 import com.madebyme.citiesgame.views.MyTextView;
 
-import java.util.ArrayList;
-
 public class HighScoresActivity extends Activity {
 
-    private ArrayList<GameSave> saves;
     private HighScoresListAdapter adapter;
     private HighScoresDBManager manager;
     private LinearLayout layout;
     private MyTextView noScores;
-    private int itemsAmount = 0;
+    private int itemsAmount;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +34,7 @@ public class HighScoresActivity extends Activity {
     protected void onResume() {
         super.onResume();
         manager = App.getHighScoresDBManager();
-        saves = manager.getHighScores();
-        adapter = new HighScoresListAdapter(saves,
+        adapter = new HighScoresListAdapter(manager.getHighScores(),
                 (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
         renewList();
 
