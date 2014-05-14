@@ -28,7 +28,7 @@ public class HighScoresDBManager {
 
     public ArrayList<GameSave> getHighScores(){
         ArrayList<GameSave> saves = new ArrayList<GameSave>();
-        Cursor c = database.query(Constants.HIDHSCORES_DB_NAME, null, null, null, null, null, Constants.COLUMN_SCORE);
+        Cursor c = database.query(Constants.HIDHSCORES_DB_NAME, null, null, null, null, null, Constants.COLUMN_SCORE + " DESC");
         for(int i = 0; i < c.getCount(); i++){
             c.moveToPosition(i);
             saves.add(new GameSave(c.getString(c.getColumnIndex(Constants.COLUMN_NAME)),

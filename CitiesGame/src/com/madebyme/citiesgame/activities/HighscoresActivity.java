@@ -18,6 +18,7 @@ public class HighScoresActivity extends Activity {
 
     private HighScoresListAdapter adapter;
     private HighScoresDBManager manager;
+    private ListView listView;
     private LinearLayout layout;
     private MyTextView noScores;
     private int itemsAmount;
@@ -28,6 +29,7 @@ public class HighScoresActivity extends Activity {
         setContentView(R.layout.activity_highscore);
         layout = (LinearLayout) findViewById(R.id.layout_high_score);
         noScores = (MyTextView) findViewById(R.id.no_scores);
+        listView = (ListView)findViewById(R.id.all_list_view);
 	}
 
     @Override
@@ -56,10 +58,7 @@ public class HighScoresActivity extends Activity {
     }
 
     private void addListItem(){
-        ListView listView = new ListView(this);
         listView.setAdapter(adapter);
-        layout.addView(listView,
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
 }

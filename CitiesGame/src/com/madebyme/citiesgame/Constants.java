@@ -21,4 +21,6 @@ public class Constants {
 
     public static final String NO_HIGH_SCORES = "У Вас пока нет рекордов";
 
+    public static final int forWinPrise = 100;
+
 }

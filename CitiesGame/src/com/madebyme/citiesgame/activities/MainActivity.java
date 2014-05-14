@@ -42,7 +42,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComps();
-        App.getHighScoresDBManager().delete();
         manager.initCursor();
         if (!manager.initCursor()) {
             MyTask task = new MyTask(this);
@@ -212,7 +211,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     private void callDialog(boolean userWin){
         if(userWin)
-            score = score + 100;
+            score = score + Constants.forWinPrise;
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
         dialog.setArguments(bundle);

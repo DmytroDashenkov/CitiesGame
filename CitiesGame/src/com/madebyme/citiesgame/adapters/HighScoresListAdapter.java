@@ -33,7 +33,7 @@ public class HighScoresListAdapter extends BaseAdapter{
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return saves.get(i);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class HighScoresListAdapter extends BaseAdapter{
         saves = new App().getHighScoresDBManager().getHighScores();
 
         if(v == null){
-            v = inflater.inflate(R.layout.list_view, null);
+            v = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
             holder.tvUserName = (MyTextView) v.findViewById(R.id.user_name_field);
             holder.tvDate = (MyTextView) v.findViewById(R.id.date_field);
@@ -67,9 +67,7 @@ public class HighScoresListAdapter extends BaseAdapter{
 
         GameSave gameSave = saves.get(position);
         holder.tvUserName.setText(gameSave.getName());
-        holder.tvScore.setText(new StringBuilder().append("Счет: ")
-                .append(String.valueOf(gameSave.getScore()))
-                .toString());
+        holder.tvScore.setText("Счет: " + String.valueOf(gameSave.getScore()));
         holder.tvDate.setText(gameSave.getDate());
 
         return v;
