@@ -6,8 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.madebyme.citiesgame.App;
-import com.madebyme.citiesgame.GameSave;
-import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
+import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.listeners.UserNameCallBack;
@@ -47,7 +46,7 @@ public class MyDialog extends DialogFragment implements View.OnClickListener, Us
     @Override
     public void onClick(View v) {
         listener.onDialogButtonClick();
-        App.getHighScoresDBManager().inputDBFeed(new GameSave(getUserName(), bundle.getInt("score", 0), getCurrentDate()));
+        App.getDBManager().inputHighScore(new GameSave(getUserName(), bundle.getInt("score", 0), getCurrentDate()));
         dismiss();
     }
 

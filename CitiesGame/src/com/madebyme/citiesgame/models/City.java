@@ -1,4 +1,4 @@
-package com.madebyme.citiesgame;
+package com.madebyme.citiesgame.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

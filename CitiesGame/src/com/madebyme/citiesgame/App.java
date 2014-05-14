@@ -2,24 +2,22 @@ package com.madebyme.citiesgame;
 
 import android.app.Application;
 import android.graphics.Typeface;
-import com.madebyme.citiesgame.highscoresdb.HighScoresDBManager;
-import com.madebyme.citiesgame.maindb.DBManager;
-import com.madebyme.citiesgame.supportingdb.UsedCitiesManager;
+import com.madebyme.citiesgame.db.DBManager;
+import com.madebyme.citiesgame.db.DBOpenHelper;
 
 public class App extends Application {
 	
 	private static DBManager dbManager;
+    private static DBOpenHelper dbOpenHelper;
     private static Typeface typeface;
-    private static HighScoresDBManager highScoresDBManager;
-    private static UsedCitiesManager usedCitiesManager;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		dbManager = new DBManager(this);
+        dbOpenHelper = new DBOpenHelper(this);
+		dbManager = new DBManager();
         typeface = Typeface.createFromAsset(getAssets(), Constants.FONT_FILE_MAME);
-        highScoresDBManager = new HighScoresDBManager(this);
-        usedCitiesManager = new UsedCitiesManager(this);
+
 	}
 	
 	public static DBManager getDBManager() {
@@ -30,11 +28,7 @@ public class App extends Application {
         return typeface;
     }
 
-    public static HighScoresDBManager getHighScoresDBManager() {
-        return highScoresDBManager;
-    }
-
-    public static UsedCitiesManager getUsedCitiesManager() {
-        return usedCitiesManager;
+    public static DBOpenHelper getDBOpenHelper(){
+        return dbOpenHelper;
     }
 }

@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import com.madebyme.citiesgame.App;
-import com.madebyme.citiesgame.GameSave;
+import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.views.MyTextView;
 
@@ -51,7 +51,7 @@ public class HighScoresListAdapter extends BaseAdapter{
     public View getView(int position, View v, ViewGroup parent) {
 
         ViewHolder holder;
-        saves = new App().getHighScoresDBManager().getHighScores();
+        saves = new App().getDBManager().getHighScores();
 
         if(v == null){
             v = inflater.inflate(R.layout.list_item, null);

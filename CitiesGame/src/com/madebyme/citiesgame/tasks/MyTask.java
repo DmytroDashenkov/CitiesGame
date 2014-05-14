@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
-import com.madebyme.citiesgame.maindb.CitiesFinder;
+import com.madebyme.citiesgame.db.CitiesFinder;
 
 public class MyTask extends AsyncTask<Context, Void, Void> {
 

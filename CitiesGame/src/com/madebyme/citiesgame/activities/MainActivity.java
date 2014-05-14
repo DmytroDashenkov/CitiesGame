@@ -13,9 +13,9 @@ import com.madebyme.citiesgame.*;
 import com.madebyme.citiesgame.fragments.MyDialog;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
-import com.madebyme.citiesgame.maindb.CitiesFinder;
-import com.madebyme.citiesgame.maindb.DBManager;
-import com.madebyme.citiesgame.supportingdb.UsedCitiesManager;
+import com.madebyme.citiesgame.db.CitiesFinder;
+import com.madebyme.citiesgame.db.DBManager;
+import com.madebyme.citiesgame.models.City;
 import com.madebyme.citiesgame.tasks.MyTask;
 import com.madebyme.citiesgame.views.MyButton;
 import com.madebyme.citiesgame.views.MyEditText;
@@ -29,7 +29,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private MyButton btNewGame;
     private CitiesFinder citiesFinder;
     private DBManager manager;
-    private UsedCitiesManager usedCitiesManager;
     private ProgressBar pbDbLoadingBar;
     private String lastCity;
     private SharedPreferences pref;
@@ -84,7 +83,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         btOk.setOnClickListener(this);
         btNewGame.setOnClickListener(this);
         manager = App.getDBManager();
-        usedCitiesManager = App.getUsedCitiesManager();
         score = 0;
         dialog = MyDialog.newInstance(this);
     }
@@ -105,8 +103,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         City city;
         do {
             city = manager.findCityByFirstLetter(firstLetter);
-        } while (usedCitiesManager.checkIfUsed(city));
-        usedCitiesManager.inputDBFeed(city);
+        } while (manager.checkIfUsed(city));
+        manager.inputUsedCity(city);
 
         return city.getName();
     }
@@ -148,7 +146,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         if(shouldCallDialog){
             callDialog(userWin);
         }
-        usedCitiesManager.deleteAll();
+        manager.deleteAllUsedCities();
         tvCompCity.setText("Ваш ход!");
         lastCity = null;
         score = 0;
@@ -170,11 +168,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
         String city = etEnterCity.getText().toString();
         if (city.length() != 0) {
             City town = new City(city, citiesFinder.getFirstLetter(city));
-            if (manager.checkCityExistance(town)) {
-                if (!usedCitiesManager.checkIfUsed(town)) {
+            if (manager.checkCityExistence(town)) {
+                if (!manager.checkIfUsed(town)) {
                         if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
                             if(!checkIfGameIsFinished(lastCity)){
-                                usedCitiesManager.inputDBFeed(town);
+                                manager.inputUsedCity(town);
                                 String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
                                 String answerCity = findAnswerCity(requestedLetter);
                                 lastCity = answerCity;
@@ -211,7 +209,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
 
     private void callDialog(boolean userWin){
         if(userWin)
-            score = score + Constants.forWinPrise;
+            score = score + Constants.FOR_VICTORY_PRISE;
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
         dialog.setArguments(bundle);
