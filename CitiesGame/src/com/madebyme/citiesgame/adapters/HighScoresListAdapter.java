@@ -1,5 +1,7 @@
 package com.madebyme.citiesgame.adapters;
 
+import android.content.Context;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +19,9 @@ public class HighScoresListAdapter extends BaseAdapter{
     private LayoutInflater inflater;
 
 
-    public HighScoresListAdapter(ArrayList<GameSave> saves, LayoutInflater inflater) {
+    public HighScoresListAdapter(ArrayList<GameSave> saves, Context context) {
         this.saves = saves;
-        this.inflater = inflater;
+        this.inflater = LayoutInflater.from(context);
     }
 
     public ArrayList<GameSave> getSaves(){

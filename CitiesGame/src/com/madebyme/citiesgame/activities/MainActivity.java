@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.madebyme.citiesgame.*;
@@ -21,7 +19,8 @@ import com.madebyme.citiesgame.views.MyButton;
 import com.madebyme.citiesgame.views.MyEditText;
 import com.madebyme.citiesgame.views.MyTextView;
 
-public class MainActivity extends FragmentActivity implements OnClickListener, OnDataLoadedListener, OnClickDialogButtonListener {
+public class MainActivity extends FragmentActivity implements OnClickListener,
+        OnDataLoadedListener, OnClickDialogButtonListener{
 
     private MyButton btOk;
     private MyEditText etEnterCity;
@@ -35,6 +34,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
     private MyTextView tvWaitPlease;
     private int score;
     private MyDialog dialog;
+    private boolean dialogIsCalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +94,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                 onButtonOkClicked();
                 break;
             case R.id.bt_new_game:
-                onNewGameStarted(true, false);
+                if (!dialogIsCalled)
+                    onNewGameStarted(true, false);
+                dialogIsCalled = true;
                 break;
         }
     }
@@ -183,20 +185,19 @@ public class MainActivity extends FragmentActivity implements OnClickListener, O
                                 onNewGameStarted(true, true);
                             }
                         }else{
-                        Toast.makeText(this, "Не та буква!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.wrong_letter, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this, "Было!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.used, Toast.LENGTH_SHORT).show();
                     etEnterCity.setText(null);
                 }
             } else {
-                Toast.makeText(this, "Такого города нет!", Toast.LENGTH_SHORT)
+                Toast.makeText(this, R.string.wrong_city, Toast.LENGTH_SHORT)
                         .show();
                 etEnterCity.setText(null);
             }
         } else {
-            Toast.makeText(this, "Сначала введите город!",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enter_city_first, Toast.LENGTH_SHORT).show();
 
         }
     }

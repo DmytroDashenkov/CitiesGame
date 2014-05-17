@@ -53,20 +53,23 @@ public class CitiesFinder {
 	}
 
 	public void prepareDBFeed() {
-
-		try {
-			allCities = this.getAllCitiesString();
-		} catch (IOException e) {
-			Log.e("Error:", e.getMessage());
-		}
-
+        DBManager dbManager = App.getDBManager();
+        try {
+            allCities = this.getAllCitiesString();
+        } catch (IOException e) {
+            Log.e("Error:", e.getMessage());
+        }
         String[] cities = allCities.split("  ");
-		for (String oneCity : cities) {
-			App.getDBManager().inputDBFeed(new City(oneCity, getFirstLetter(oneCity)));
-            Log.d("inputUsedCity()", "ready");
-		}
-        Log.d("prepareDBFeed()", "ready");
-	}
+        dbManager.beginTransaction();
+        try{
+            for (String oneCity : cities) {
+                dbManager.inputDBFeed(new City(oneCity, getFirstLetter(oneCity)));
+            }
+            dbManager.setTransactionSuccessful();
+        }finally {
+            dbManager.endTransaction();
+        }
+    }
 
 	public String getLastLetter(String word) {
 		try {

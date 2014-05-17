@@ -121,4 +121,16 @@ public class DBManager {
         return c.getCount();
     }
 
+    public void beginTransaction(){
+        allCities.beginTransaction();
+    }
+
+    public void setTransactionSuccessful(){
+        allCities.setTransactionSuccessful();
+    }
+
+    public void endTransaction(){
+        allCities.endTransaction();
+    }
+
 }

@@ -25,22 +25,26 @@ public class MyDialog extends DialogFragment implements View.OnClickListener, Us
     private MyEditText etUserName;
     private Bundle bundle;
 
-    public MyDialog(OnClickDialogButtonListener listener) {
-       this.listener = listener;
+    public void setListener(OnClickDialogButtonListener listener) {
+        this.listener = listener;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getDialog().setTitle("Игра окончена!");
+        getDialog().setTitle(R.string.game_over);
         View v = inflater.inflate(R.layout.game_finish_dialog, null);
+        init(v);
+        tvScore.setText(String.valueOf(bundle.getInt("score", 0)));
+        return v;
+    }
+
+    private void init(View v){
         bundle = getArguments();
         bt_ok = (MyButton) v.findViewById(R.id.dialog_ok);
         bt_ok.setOnClickListener(this);
         etUserName = (MyEditText) v.findViewById(R.id.user_name);
         tvScore = (MyTextView) v.findViewById(R.id.score);
 
-        tvScore.setText(String.valueOf(bundle.getInt("score", 0)));
-        return v;
     }
 
     @Override
@@ -51,7 +55,8 @@ public class MyDialog extends DialogFragment implements View.OnClickListener, Us
     }
 
     public static MyDialog newInstance(OnClickDialogButtonListener listener){
-        MyDialog dialog = new MyDialog(listener);
+        MyDialog dialog = new MyDialog();
+        dialog.setListener(listener);
         return dialog;
     }
 
@@ -68,5 +73,6 @@ public class MyDialog extends DialogFragment implements View.OnClickListener, Us
             name = "Игрок";
         return name;
     }
+
 }
 

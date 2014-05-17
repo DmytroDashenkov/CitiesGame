@@ -9,8 +9,14 @@
     <string name="highscores">Рекорды</string>
     <string name="newgame">Новая игра!</string>
     <string name="game_over_text">Игра окончена! Счет:</string>
+    <string name="game_over">Игра окончена!</string>
     <string name="wait_please">Загрузка базы данных…</string>
     <string name="user_name_hint">Введите имя</string>
     <string name="no_high_scores">У Вас пока нет рекордов</string>
+    <string name="your_move">Ваш ход!</string>
+    <string name="wrong_letter">Не та буква!</string>
+    <string name="used">Было!</string>
+    <string name="wrong_city">Такого города нет!</string>
+    <string name="enter_city_first">Сначала введите город!</string>
 
 </resources>

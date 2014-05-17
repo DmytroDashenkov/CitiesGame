@@ -32,8 +32,7 @@ public class HighScoresActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        adapter = new HighScoresListAdapter(manager.getHighScores(),
-                (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
+        adapter = new HighScoresListAdapter(manager.getHighScores(),this);
         renewList();
 
     }
