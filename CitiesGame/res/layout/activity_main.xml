@@ -32,7 +32,7 @@
             style="@style/progress_bar_style"/>
     <com.madebyme.citiesgame.views.MyButton
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/new_game_bt_height"
             android:text="@string/newgame"
             android:id="@+id/bt_new_game"
             android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
@@ -47,5 +47,13 @@
             android:layout_below="@id/db_loading_progress"
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
+
+    <com.madebyme.citiesgame.views.MyTextView
+            android:id="@+id/current_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score"
+            android:layout_above="@+id/user_city" android:layout_alignLeft="@+id/user_city"
+            android:layout_alignStart="@+id/user_city"/>
 
 </RelativeLayout>

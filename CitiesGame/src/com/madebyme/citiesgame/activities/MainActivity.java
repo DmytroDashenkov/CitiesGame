@@ -24,6 +24,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 
     private MyButton btOk;
     private MyEditText etEnterCity;
+    private MyTextView tvScore;
     private MyTextView tvCompCity;
     private MyButton btNewGame;
     private CitiesFinder citiesFinder;
@@ -34,7 +35,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
     private MyTextView tvWaitPlease;
     private int score;
     private MyDialog dialog;
-    private boolean dialogIsCalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +79,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         pbDbLoadingBar = (ProgressBar) findViewById(R.id.db_loading_progress);
         btNewGame = (MyButton) findViewById(R.id.bt_new_game);
         tvWaitPlease = (MyTextView) findViewById(R.id.pb_name);
+        tvScore = (MyTextView) findViewById(R.id.current_score);
         citiesFinder = new CitiesFinder(this);
         btOk.setOnClickListener(this);
         btNewGame.setOnClickListener(this);
@@ -94,9 +95,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
                 onButtonOkClicked();
                 break;
             case R.id.bt_new_game:
-                if (!dialogIsCalled)
-                    onNewGameStarted(true, false);
-                dialogIsCalled = true;
+                onNewGameStarted(true, false);
                 break;
         }
     }
@@ -149,10 +148,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
             callDialog(userWin);
         }
         manager.deleteAllUsedCities();
-        tvCompCity.setText("Ваш ход!");
+        tvCompCity.setText(R.string.your_move);
         lastCity = null;
         score = 0;
         etEnterCity.setText("");
+        tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
 
 
     }
@@ -181,6 +181,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
                                 tvCompCity.setText(answerCity);
                                 etEnterCity.setText("");
                                 score++;
+                                tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
                             }else{
                                 onNewGameStarted(true, true);
                             }

@@ -1,7 +1,6 @@
 package com.madebyme.citiesgame.adapters;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,13 @@ public class HighScoresListAdapter extends BaseAdapter{
 
     private ArrayList<GameSave> saves;
     private LayoutInflater inflater;
+    private Context context;
 
 
     public HighScoresListAdapter(ArrayList<GameSave> saves, Context context) {
         this.saves = saves;
         this.inflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     public ArrayList<GameSave> getSaves(){
@@ -69,10 +70,15 @@ public class HighScoresListAdapter extends BaseAdapter{
 
         GameSave gameSave = saves.get(position);
         holder.tvUserName.setText(gameSave.getName());
-        holder.tvScore.setText("Счет: " + String.valueOf(gameSave.getScore()));
+        holder.tvScore.setText(context.getResources().getString(R.string.score) + String.valueOf(gameSave.getScore()));
         holder.tvDate.setText(gameSave.getDate());
 
         return v;
     }
+
+    public void clearSaves(){
+        saves.clear();
+    }
+
 
 }

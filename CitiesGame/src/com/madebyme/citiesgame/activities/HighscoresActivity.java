@@ -1,9 +1,9 @@
 package com.madebyme.citiesgame.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import com.madebyme.citiesgame.App;
@@ -32,17 +32,32 @@ public class HighScoresActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        adapter = new HighScoresListAdapter(manager.getHighScores(),this);
         renewList();
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.high_scores, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        App.getDBManager().deleteHighScores();
+        deleteList();
+        renewList();
+        return super.onOptionsItemSelected(item);
+    }
+
     private void renewList(){
+        adapter = new HighScoresListAdapter(manager.getHighScores(),this);
         if(adapter.getCount() == 0){
             noScores.setVisibility(View.VISIBLE);
         } else {
             while (manager.getHighScoresRowCount() != itemsAmount){
-                if (itemsAmount <= 10){
+                if (itemsAmount < 10){
                     addListItem();
                     itemsAmount++;
                 }else{
@@ -52,8 +67,19 @@ public class HighScoresActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        deleteList();
+    }
+
     private void addListItem(){
         listView.setAdapter(adapter);
+    }
+
+    private void deleteList(){
+        adapter.clearSaves();
+        adapter.notifyDataSetChanged();
     }
 
 }

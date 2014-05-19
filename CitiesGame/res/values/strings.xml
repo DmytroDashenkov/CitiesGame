@@ -3,6 +3,7 @@
 
     <string name="app_name">Cities Game</string>
     <string name="action_settings">Настройки</string>
+    <string name="clear">Очистить</string>
     <string name="ok_text">OK </string>
     <string name="invitement">Ваш ход!</string>
     <string name="hint">Введите город</string>
@@ -18,5 +19,6 @@
     <string name="used">Было!</string>
     <string name="wrong_city">Такого города нет!</string>
     <string name="enter_city_first">Сначала введите город!</string>
+    <string name="score">Счет:</string>
 
 </resources>

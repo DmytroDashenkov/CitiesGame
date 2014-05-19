@@ -15,37 +15,33 @@ import java.util.Random;
 
 public class DBManager {
 
-	private SQLiteDatabase allCities;
-    private SQLiteDatabase usedCities;
-    private SQLiteDatabase highScores;
+	private SQLiteDatabase db;
 
 	public DBManager() {
-		allCities = App.getDBOpenHelper().getWritableDatabase();
-        usedCities = App.getDBOpenHelper().getWritableDatabase();
-        highScores = App.getDBOpenHelper().getWritableDatabase();
+		db = App.getDBOpenHelper().getWritableDatabase();
 	}
 	
 	public void inputDBFeed(City model) {
 		ContentValues cv = new ContentValues();
 		cv.put(Constants.COLUMN_NAME, model.getName());
 		cv.put(Constants.COLUMN_FIRST_LETTER, model.getFirstLetter());
-		allCities.insert(Constants.MAIN_TABLE_NAME, null, cv);
+		db.insert(Constants.MAIN_TABLE_NAME, null, cv);
 	}
 
 	public boolean checkCityExistence(City city) {
-		Cursor c = allCities.query(Constants.MAIN_TABLE_NAME, null, "Name = ?",
+		Cursor c = db.query(Constants.MAIN_TABLE_NAME, null, "Name = ?",
 				new String[] { city.getName() }, null, null, null);
 		return c.moveToFirst();
 	}
 
 	public boolean initCursor() {
-        Cursor cursor = allCities.query(Constants.MAIN_TABLE_NAME, null, null, null, null,
+        Cursor cursor = db.query(Constants.MAIN_TABLE_NAME, null, null, null, null,
                 null, null);
         return cursor.moveToFirst();
     }
 
     public City findCityByFirstLetter(String letter) {
-        Cursor cursor = allCities.rawQuery(
+        Cursor cursor = db.rawQuery(
                 "SELECT * FROM " + Constants.MAIN_TABLE_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[] { letter });
         Random r = new Random();
@@ -61,12 +57,12 @@ public class DBManager {
     }
 
     public boolean compereTablesOfUsedAndGeneral(String letter){
-        Cursor used = allCities.rawQuery(
+        Cursor used = db.rawQuery(
                 "SELECT * FROM " + Constants.MAIN_TABLE_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[] { letter });
-        Cursor general = getUsedCities().rawQuery(
+        Cursor general = db.rawQuery(
                 "SELECT * FROM " + Constants.SUPPORTING_TABLE_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
-                new String[] { letter });
+                new String[]{letter});
         if (used.getCount() == general.getCount())
             return true;
         else
@@ -78,21 +74,17 @@ public class DBManager {
         cv.put(Constants.COLUMN_NAME, model.getName());
         cv.put(Constants.COLUMN_FIRST_LETTER, model.getFirstLetter());
         cv.put(Constants.COLUMN_LAST_LETTER, model.getLastLetter());
-        usedCities.insert(Constants.SUPPORTING_TABLE_NAME, null, cv);
+        db.insert(Constants.SUPPORTING_TABLE_NAME, null, cv);
     }
 
     public boolean checkIfUsed(City city){
-        Cursor c = usedCities.query(Constants.SUPPORTING_TABLE_NAME, null, "Name = ?",
+        Cursor c = db.query(Constants.SUPPORTING_TABLE_NAME, null, "Name = ?",
                 new String[] { city.getName() }, null, null, null);
         return c.moveToFirst();
     }
 
     public void deleteAllUsedCities(){
-        usedCities.delete(Constants.SUPPORTING_TABLE_NAME, null, null);
-    }
-
-    public SQLiteDatabase getUsedCities(){
-        return usedCities;
+        db.delete(Constants.SUPPORTING_TABLE_NAME, null, null);
     }
 
     public void inputHighScore(GameSave save){
@@ -100,12 +92,12 @@ public class DBManager {
         cv.put(Constants.COLUMN_DATE, save.getDate());
         cv.put(Constants.COLUMN_SCORE, save.getScore());
         cv.put(Constants.COLUMN_NAME, save.getName());
-        highScores.insert(Constants.HIGH_SCORES_TABLE_NAME, null, cv);
+        db.insert(Constants.HIGH_SCORES_TABLE_NAME, null, cv);
     }
 
     public ArrayList<GameSave> getHighScores(){
         ArrayList<GameSave> saves = new ArrayList<GameSave>();
-        Cursor c = highScores.query(Constants.HIGH_SCORES_TABLE_NAME, null, null, null, null, null, Constants.COLUMN_SCORE + " DESC");
+        Cursor c = db.query(Constants.HIGH_SCORES_TABLE_NAME, null, null, null, null, null, Constants.COLUMN_SCORE + " DESC");
         for(int i = 0; i < c.getCount(); i++){
             c.moveToPosition(i);
             saves.add(new GameSave(c.getString(c.getColumnIndex(Constants.COLUMN_NAME)),
@@ -117,20 +109,24 @@ public class DBManager {
     }
 
     public int getHighScoresRowCount(){
-        Cursor c = highScores.query(Constants.HIGH_SCORES_TABLE_NAME, null, null, null, null, null, Constants.COLUMN_SCORE);
+        Cursor c = db.query(Constants.HIGH_SCORES_TABLE_NAME, null, null, null, null, null, Constants.COLUMN_SCORE);
         return c.getCount();
     }
 
     public void beginTransaction(){
-        allCities.beginTransaction();
+        db.beginTransaction();
     }
 
     public void setTransactionSuccessful(){
-        allCities.setTransactionSuccessful();
+        db.setTransactionSuccessful();
     }
 
     public void endTransaction(){
-        allCities.endTransaction();
+        db.endTransaction();
+    }
+
+    public void deleteHighScores(){
+        db.delete(Constants.HIGH_SCORES_TABLE_NAME, null, null);
     }
 
 }
