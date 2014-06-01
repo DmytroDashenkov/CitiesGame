@@ -8,7 +8,7 @@ import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import com.madebyme.citiesgame.*;
-import com.madebyme.citiesgame.fragments.MyDialog;
+import com.madebyme.citiesgame.fragments.GameOverDialog;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.db.CitiesFinder;
@@ -19,8 +19,9 @@ import com.madebyme.citiesgame.views.MyButton;
 import com.madebyme.citiesgame.views.MyEditText;
 import com.madebyme.citiesgame.views.MyTextView;
 
+
 public class MainActivity extends FragmentActivity implements OnClickListener,
-        OnDataLoadedListener, OnClickDialogButtonListener{
+        OnDataLoadedListener, OnClickDialogButtonListener {
 
     private MyButton btOk;
     private MyEditText etEnterCity;
@@ -34,12 +35,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
     private SharedPreferences pref;
     private MyTextView tvWaitPlease;
     private int score;
-    private MyDialog dialog;
+    private GameOverDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_fragment);
         initComps();
         manager.initCursor();
         if (!manager.initCursor()) {
@@ -47,10 +48,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
             task.execute(this);
         }
         lastCity = loadLastCityAndScoreFromPreferences();
-        if(lastCity.length() != 0)
+        if (lastCity.length() != 0) {
             tvCompCity.setText(lastCity);
-        else
+        } else {
             onNewGameStarted(false, false);
+        }
     }
 
     @Override
@@ -85,12 +87,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         btNewGame.setOnClickListener(this);
         manager = App.getDBManager();
         score = 0;
-        dialog = MyDialog.newInstance(this);
+        dialog = GameOverDialog.newInstance(this);
     }
 
     @Override
     public void onClick(View src) {
-        switch (src.getId()){
+        switch (src.getId()) {
             case R.id.ok:
                 onButtonOkClicked();
                 break;
@@ -112,14 +114,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 
     @Override
     public void onDataLoaded(boolean isLoaded) {
-        if(isLoaded){
+        if (isLoaded) {
             btOk.setVisibility(View.VISIBLE);
             btNewGame.setVisibility(View.VISIBLE);
             etEnterCity.setVisibility(View.VISIBLE);
             tvCompCity.setVisibility(View.VISIBLE);
             pbDbLoadingBar.setVisibility(View.INVISIBLE);
             tvWaitPlease.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             btOk.setVisibility(View.INVISIBLE);
             btNewGame.setVisibility(View.INVISIBLE);
             etEnterCity.setVisibility(View.INVISIBLE);
@@ -129,7 +131,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         }
     }
 
-    private void saveLastCityAndScoreInPreference(String city){
+    private void saveLastCityAndScoreInPreference(String city) {
         pref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("Last Called City", city);
@@ -137,14 +139,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         editor.commit();
     }
 
-    private String loadLastCityAndScoreFromPreferences(){
+    private String loadLastCityAndScoreFromPreferences() {
         pref = getPreferences(MODE_PRIVATE);
         score = getPreferences(MODE_PRIVATE).getInt("Score", 0);
         return pref.getString("Last Called City", "");
     }
 
-    private void onNewGameStarted(boolean shouldCallDialog, boolean userWin){
-        if(shouldCallDialog){
+    private void onNewGameStarted(boolean shouldCallDialog, boolean userWin) {
+        if (shouldCallDialog) {
             callDialog(userWin);
         }
         manager.deleteAllUsedCities();
@@ -152,40 +154,41 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         lastCity = null;
         score = 0;
         etEnterCity.setText("");
+
         tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
 
 
     }
 
-    private boolean checkIfGameIsFinished(String lastUsedCity){
-        if(lastUsedCity != null){
+    private boolean checkIfGameIsFinished(String lastUsedCity) {
+        if (lastUsedCity != null) {
             String letter = citiesFinder.getLastLetter(lastUsedCity).toUpperCase();
             return manager.compereTablesOfUsedAndGeneral(letter);
-        }else{
+        } else {
             return false;
         }
     }
 
-    private void onButtonOkClicked(){
+    private void onButtonOkClicked() {
         String city = etEnterCity.getText().toString();
         if (city.length() != 0) {
             City town = new City(city, citiesFinder.getFirstLetter(city));
             if (manager.checkCityExistence(town)) {
                 if (!manager.checkIfUsed(town)) {
-                        if(lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())){
-                            if(!checkIfGameIsFinished(lastCity)){
-                                manager.inputUsedCity(town);
-                                String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
-                                String answerCity = findAnswerCity(requestedLetter);
-                                lastCity = answerCity;
-                                tvCompCity.setText(answerCity);
-                                etEnterCity.setText("");
-                                score++;
-                                tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
-                            }else{
-                                onNewGameStarted(true, true);
-                            }
-                        }else{
+                    if (lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())) {
+                        if (!checkIfGameIsFinished(lastCity)) {
+                            manager.inputUsedCity(town);
+                            String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
+                            String answerCity = findAnswerCity(requestedLetter);
+                            lastCity = answerCity;
+                            tvCompCity.setText(answerCity);
+                            etEnterCity.setText("");
+                            score++;
+                            tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
+                        } else {
+                            onNewGameStarted(true, true);
+                        }
+                    } else {
                         Toast.makeText(this, R.string.wrong_letter, Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -209,8 +212,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
 
     }
 
-    private void callDialog(boolean userWin){
-        if(userWin)
+    private void callDialog(boolean userWin) {
+        if (userWin)
             score = score + Constants.FOR_VICTORY_PRISE;
         Bundle bundle = new Bundle();
         bundle.putInt("score", score);
@@ -218,4 +221,5 @@ public class MainActivity extends FragmentActivity implements OnClickListener,
         dialog.show(getSupportFragmentManager(), "Dialog fragment");
 
     }
+
 }

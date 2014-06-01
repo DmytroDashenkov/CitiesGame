@@ -17,7 +17,7 @@ import com.madebyme.citiesgame.views.MyTextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MyDialog extends DialogFragment implements View.OnClickListener, UserNameCallBack {
+public class GameOverDialog extends DialogFragment implements View.OnClickListener, UserNameCallBack {
 
     private OnClickDialogButtonListener listener;
     private MyButton bt_ok;
@@ -54,8 +54,8 @@ public class MyDialog extends DialogFragment implements View.OnClickListener, Us
         dismiss();
     }
 
-    public static MyDialog newInstance(OnClickDialogButtonListener listener){
-        MyDialog dialog = new MyDialog();
+    public static GameOverDialog newInstance(OnClickDialogButtonListener listener){
+        GameOverDialog dialog = new GameOverDialog();
         dialog.setListener(listener);
         return dialog;
     }

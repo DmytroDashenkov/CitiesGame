@@ -20,5 +20,6 @@
     <string name="wrong_city">Такого города нет!</string>
     <string name="enter_city_first">Сначала введите город!</string>
     <string name="score">Счет:</string>
+    <string name="app_id">327881990693475</string>
 
 </resources>

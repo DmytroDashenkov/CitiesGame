@@ -23,7 +23,7 @@ public class HighScoresActivity extends Activity {
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_highscore);
+        setContentView(R.layout.highscores_fragment);
         noScores = (MyTextView) findViewById(R.id.no_scores);
         listView = (ListView)findViewById(R.id.all_list_view);
         manager = App.getDBManager();
