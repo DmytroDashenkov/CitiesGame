@@ -10,6 +10,7 @@ public class App extends Application {
 	private static DBManager dbManager;
     private static DBOpenHelper dbOpenHelper;
     private static Typeface typeface;
+    private static Typeface fbTypeface;
 	
 	@Override
 	public void onCreate() {
@@ -17,6 +18,7 @@ public class App extends Application {
         dbOpenHelper = new DBOpenHelper(this);
 		dbManager = new DBManager();
         typeface = Typeface.createFromAsset(getAssets(), Constants.FONT_FILE_MAME);
+        fbTypeface = Typeface.createFromAsset(getAssets(), Constants.FONT_FB);
 
 	}
 	
@@ -26,6 +28,10 @@ public class App extends Application {
 
     public static Typeface getTypeface(){
         return typeface;
+    }
+
+    public static Typeface getFacebookTypeface(){
+        return fbTypeface;
     }
 
     public static DBOpenHelper getDBOpenHelper(){

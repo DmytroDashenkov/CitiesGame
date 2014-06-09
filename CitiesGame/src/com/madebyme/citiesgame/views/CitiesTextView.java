@@ -2,22 +2,22 @@ package com.madebyme.citiesgame.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.EditText;
+import android.widget.TextView;
 import com.madebyme.citiesgame.App;
 
-public class MyEditText extends EditText {
+public class CitiesTextView extends TextView{
 
-    public MyEditText(Context context) {
+    public CitiesTextView(Context context) {
         super(context);
         init();
     }
 
-    public MyEditText(Context context, AttributeSet attrs) {
+    public CitiesTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyEditText(Context context, AttributeSet attrs, int defStyle) {
+    public CitiesTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

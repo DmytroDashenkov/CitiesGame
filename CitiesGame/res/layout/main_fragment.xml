@@ -5,7 +5,7 @@
     android:background="@color/bg_color"
     tools:context=".MainActivity" >
 
-    <com.madebyme.citiesgame.views.MyButton
+    <com.madebyme.citiesgame.views.CitiesButton
             android:id="@+id/ok"
             android:layout_width="@dimen/ok_width"
             android:layout_height="@dimen/ok_height"
@@ -14,23 +14,23 @@
             android:layout_centerHorizontal="true"
             android:text="@string/ok_text"
             android:background="@drawable/selector"
-            android:textColor="@color/ok_text_color"/>
+            android:textColor="@color/white"/>
 
 
-    <com.madebyme.citiesgame.views.MyTextView
+    <com.madebyme.citiesgame.views.CitiesTextView
             android:id="@+id/device_city"
             style="@style/device_city_style" />
 
-    <com.madebyme.citiesgame.views.MyEditText
+    <com.madebyme.citiesgame.views.CitiesEditText
             android:id="@+id/user_city"
             style="@style/user_city_style" >
 
         <requestFocus />
-    </com.madebyme.citiesgame.views.MyEditText>
+    </com.madebyme.citiesgame.views.CitiesEditText>
     <ProgressBar
             android:id="@+id/db_loading_progress"
             style="@style/progress_bar_style"/>
-    <com.madebyme.citiesgame.views.MyButton
+    <com.madebyme.citiesgame.views.CitiesButton
             android:layout_width="match_parent"
             android:layout_height="@dimen/new_game_bt_height"
             android:text="@string/newgame"
@@ -39,7 +39,7 @@
             android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
             android:background="@drawable/new_game_selector"/>
 
-    <com.madebyme.citiesgame.views.MyTextView
+    <com.madebyme.citiesgame.views.CitiesTextView
             android:id="@+id/pb_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,12 +48,20 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
 
-    <com.madebyme.citiesgame.views.MyTextView
+    <com.madebyme.citiesgame.views.CitiesTextView
             android:id="@+id/current_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/score"
             android:layout_above="@+id/user_city" android:layout_alignLeft="@+id/user_city"
             android:layout_alignStart="@+id/user_city"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:background="@drawable/city"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" android:layout_below="@+id/ok"/>
 
 </RelativeLayout>

@@ -2,22 +2,22 @@ package com.madebyme.citiesgame.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.Button;
+import android.widget.EditText;
 import com.madebyme.citiesgame.App;
 
-public class MyButton extends Button {
+public class CitiesEditText extends EditText {
 
-    public MyButton(Context context) {
+    public CitiesEditText(Context context) {
         super(context);
         init();
     }
 
-    public MyButton(Context context, AttributeSet attrs) {
+    public CitiesEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyButton(Context context, AttributeSet attrs, int defStyle) {
+    public CitiesEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

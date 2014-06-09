@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.R;
-import com.madebyme.citiesgame.views.MyTextView;
+import com.madebyme.citiesgame.views.CitiesTextView;
 
 import java.util.ArrayList;
 
@@ -45,9 +45,9 @@ public class HighScoresListAdapter extends BaseAdapter{
     }
 
     class ViewHolder{
-        MyTextView tvUserName;
-        MyTextView tvDate;
-        MyTextView tvScore;
+        CitiesTextView tvUserName;
+        CitiesTextView tvDate;
+        CitiesTextView tvScore;
     }
 
     @Override
@@ -59,9 +59,9 @@ public class HighScoresListAdapter extends BaseAdapter{
         if(v == null){
             v = inflater.inflate(R.layout.list_item, null);
             holder = new ViewHolder();
-            holder.tvUserName = (MyTextView) v.findViewById(R.id.user_name_field);
-            holder.tvDate = (MyTextView) v.findViewById(R.id.date_field);
-            holder.tvScore = (MyTextView) v.findViewById(R.id.score_field);
+            holder.tvUserName = (CitiesTextView) v.findViewById(R.id.user_name_field);
+            holder.tvDate = (CitiesTextView) v.findViewById(R.id.date_field);
+            holder.tvScore = (CitiesTextView) v.findViewById(R.id.score_field);
             v.setTag(holder);
         }
         else{

@@ -5,14 +5,17 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.facebook.android.Facebook;
 import com.madebyme.citiesgame.App;
+import com.madebyme.citiesgame.facebook.FacebookManager;
 import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.listeners.UserNameCallBack;
-import com.madebyme.citiesgame.views.MyButton;
-import com.madebyme.citiesgame.views.MyEditText;
-import com.madebyme.citiesgame.views.MyTextView;
+import com.madebyme.citiesgame.views.CitiesButton;
+import com.madebyme.citiesgame.views.CitiesEditText;
+import com.madebyme.citiesgame.views.CitiesTextView;
+import com.madebyme.citiesgame.views.FacebookShareButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,9 +23,10 @@ import java.util.Date;
 public class GameOverDialog extends DialogFragment implements View.OnClickListener, UserNameCallBack {
 
     private OnClickDialogButtonListener listener;
-    private MyButton bt_ok;
-    private MyTextView tvScore;
-    private MyEditText etUserName;
+    private CitiesButton bt_ok;
+    private FacebookShareButton bt_share;
+    private CitiesTextView tvScore;
+    private CitiesEditText etUserName;
     private Bundle bundle;
 
     public void setListener(OnClickDialogButtonListener listener) {
@@ -40,18 +44,30 @@ public class GameOverDialog extends DialogFragment implements View.OnClickListen
 
     private void init(View v){
         bundle = getArguments();
-        bt_ok = (MyButton) v.findViewById(R.id.dialog_ok);
+        bt_ok = (CitiesButton) v.findViewById(R.id.dialog_ok);
         bt_ok.setOnClickListener(this);
-        etUserName = (MyEditText) v.findViewById(R.id.user_name);
-        tvScore = (MyTextView) v.findViewById(R.id.score);
+        etUserName = (CitiesEditText) v.findViewById(R.id.user_name);
+        tvScore = (CitiesTextView) v.findViewById(R.id.score);
+        bt_share = (FacebookShareButton) v.findViewById(R.id.share);
+        bt_share.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
-        listener.onDialogButtonClick();
-        App.getDBManager().inputHighScore(new GameSave(getUserName(), bundle.getInt("score", 0), getCurrentDate()));
-        dismiss();
+        int result = bundle.getInt("score", 0);
+        switch (v.getId()){
+            case R.id.dialog_ok:
+                listener.onDialogButtonClick();
+                App.getDBManager().inputHighScore(new GameSave(getUserName(), result, getCurrentDate()));
+                dismiss();
+                break;
+            case R.id.share:
+                FacebookManager facebookManager = new  FacebookManager(getActivity(), this);
+                facebookManager.loginToFb(this);
+                facebookManager.postHighScoreOnFacebook(result, getActivity());
+                break;
+        }
     }
 
     public static GameOverDialog newInstance(OnClickDialogButtonListener listener){

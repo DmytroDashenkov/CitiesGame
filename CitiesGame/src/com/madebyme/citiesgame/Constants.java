@@ -17,6 +17,7 @@ public class Constants {
 	
 	public static final String FILE_NAME = "cities.txt";
     public static final String FONT_FILE_MAME = "font.ttf";
+    public static final String FONT_FB = "facebook_font.ttf";
 
     public static final int FOR_VICTORY_PRISE = 100;
 

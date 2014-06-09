@@ -4,28 +4,28 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-   <com.madebyme.citiesgame.views.MyTextView
+   <com.madebyme.citiesgame.views.CitiesTextView
            android:id="@+id/game_over"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="@string/game_over_text"
            android:textAppearance="?android:attr/textAppearanceLarge"
            android:layout_marginTop="45dp" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
-   <com.madebyme.citiesgame.views.MyTextView
+   <com.madebyme.citiesgame.views.CitiesTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/score"
             android:layout_marginTop="28dp" android:layout_below="@+id/game_over"
             android:layout_centerHorizontal="true"/>
-   <com.madebyme.citiesgame.views.MyButton
+   <com.madebyme.citiesgame.views.CitiesButton
             android:id="@+id/dialog_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/ok_text"
             android:layout_marginTop="94dp" android:layout_below="@+id/score" android:layout_centerHorizontal="true"/>
-    <com.madebyme.citiesgame.views.MyEditText
+   <com.madebyme.citiesgame.views.CitiesEditText
             android:layout_width="wrap_content"
             android:hint="@string/user_name_hint"
             android:layout_height="wrap_content"
@@ -38,5 +38,14 @@
             android:layout_marginTop="@dimen/user_name_margin_top"
             android:layout_alignLeft="@+id/game_over"
             android:layout_alignStart="@+id/game_over"/>
+    <com.madebyme.citiesgame.views.FacebookShareButton
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="@string/f"
+            android:id="@+id/share"
+            android:layout_alignTop="@+id/dialog_ok"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>
