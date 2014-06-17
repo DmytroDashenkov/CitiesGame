@@ -13,46 +13,52 @@ import org.json.JSONObject;
 public class FacebookManager {
 
     private Context context;
-    private Fragment fragment;
+    private int resultToPost;
+
+    public void setResultToPost(int resultToPost) {
+        this.resultToPost = resultToPost;
+    }
+
     private Session.StatusCallback callback = new Session.StatusCallback() {
+
         @Override
-        public void call(Session session, SessionState state, Exception exception) {
+        public void call(Session session, SessionState state,
+                         Exception exception) {
+            postHighScoreOnFacebook();
 
         }
     };
 
-    public FacebookManager(Context context, Fragment fragment) {
+    public FacebookManager(Context context) {
         this.context = context;
-        this.fragment = fragment;
     }
 
-    public void loginToFb(Fragment fragment) {
+
+    public void loginToFb(Context context, Fragment fragment) {
         Session session = Session.getActiveSession();
-        if (session == null) {
-            session = Session.openActiveSession(context, fragment, true, callback);
-            session.requestNewPublishPermissions(new Session.NewPermissionsRequest(fragment, "public_profile", "publish_actions"));
-            session.openForPublish(new Session.OpenRequest(fragment));
-            Log.i("session", session.getState().name());
+        if (!session.isOpened() && !session.isClosed()) {
+            session.openForRead(new Session.OpenRequest(fragment).setCallback(callback));
         } else {
-            session.openForPublish(new Session.OpenRequest(fragment));
+            Session.openActiveSession(context, fragment, true, callback);
         }
+        Log.e("name", session.getState().name());
     }
 
-    public void postHighScoreOnFacebook(int result, final Context context){
+    public void postHighScoreOnFacebook(){
         Session session = Session.getActiveSession();
-
-        if (session != null) {
-            Bundle postParams = new Bundle();
-            postParams.putString("message", String.valueOf(result));
-            Request.Callback callback = new Request.Callback() {
-                @Override
-                public void onCompleted(Response response) {
+        Log.i("session", session.getState().name());
+        Bundle postParams = new Bundle();
+        postParams.putString("message", String.valueOf(resultToPost));
+        Request.Callback callback = new Request.Callback() {
+            @Override
+            public void onCompleted(Response response) {
+                if(response.getGraphObject() != null){
                     JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
                     String postId = null;
                     try {
                         postId = graphResponse.getString("id");
                     } catch (JSONException e) {
-                        Log.i("err", "JSON error " + e.getMessage());
+                        Log.i("error", "JSON error " + e.getMessage());
                     }
                     FacebookRequestError error = response.getError();
                     if (error != null) {
@@ -61,14 +67,19 @@ public class FacebookManager {
                         Toast.makeText(context, postId, Toast.LENGTH_LONG).show();
                     }
                 }
-            };
+            }
+        };
 
-            Request request = new Request(session, "me/feed", postParams,
-                    HttpMethod.POST, callback);
+        Request request = new Request(session, "me/feed", postParams,
+                HttpMethod.POST, callback);
 
-            RequestAsyncTask task = new RequestAsyncTask(request);
-            task.execute();
-        }
+        RequestAsyncTask task = new RequestAsyncTask(request);
+        task.execute();
+    }
+
+
+    public Session.StatusCallback getCallback() {
+        return callback;
     }
 
 }

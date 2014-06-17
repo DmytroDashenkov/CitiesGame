@@ -2,6 +2,7 @@ package com.madebyme.citiesgame.fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import com.facebook.UiLifecycleHelper;
 import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.Constants;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.db.CitiesFinder;
 import com.madebyme.citiesgame.db.DBManager;
+import com.madebyme.citiesgame.facebook.FacebookManager;
+import com.madebyme.citiesgame.listeners.ShareButtonPressedListener;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.models.City;
@@ -26,7 +30,7 @@ import com.madebyme.citiesgame.views.CitiesEditText;
 import com.madebyme.citiesgame.views.CitiesTextView;
 
 public class MainGameFragment extends Fragment implements View.OnClickListener,
-        OnDataLoadedListener, OnClickDialogButtonListener {
+        OnDataLoadedListener, OnClickDialogButtonListener, ShareButtonPressedListener{
 
     private CitiesButton btOk;
     private CitiesEditText etEnterCity;
@@ -41,6 +45,8 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     private CitiesTextView tvWaitPlease;
     private int score;
     private GameOverDialog dialog;
+    private UiLifecycleHelper uiHelper;
+    private FacebookManager facebookManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +72,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     public void onPause() {
         super.onPause();
         saveLastCityAndScoreInPreference(lastCity);
+        uiHelper.onPause();
     }
 
     private void init(View view) {
@@ -81,7 +88,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
         btNewGame.setOnClickListener(this);
         manager = App.getDBManager();
         score = 0;
-        dialog = GameOverDialog.newInstance(this);
+        dialog = GameOverDialog.newInstance(this, this);
         etEnterCity.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -131,6 +138,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
             tvCompCity.setVisibility(View.VISIBLE);
             pbDbLoadingBar.setVisibility(View.INVISIBLE);
             tvWaitPlease.setVisibility(View.INVISIBLE);
+            tvScore.setVisibility(View.VISIBLE);
         } else {
             btOk.setVisibility(View.INVISIBLE);
             btNewGame.setVisibility(View.INVISIBLE);
@@ -138,6 +146,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
             tvCompCity.setVisibility(View.INVISIBLE);
             pbDbLoadingBar.setVisibility(View.VISIBLE);
             tvWaitPlease.setVisibility(View.VISIBLE);
+            tvScore.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -158,6 +167,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     private void onNewGameStarted(boolean shouldCallDialog, boolean userWin) {
         if (shouldCallDialog) {
             callDialog(userWin);
+            facebookManager.setResultToPost(score);
         }
         manager.deleteAllUsedCities();
         tvCompCity.setText(R.string.your_move);
@@ -181,38 +191,33 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
 
     private void onButtonOkClicked() {
         String city = etEnterCity.getText().toString();
-        if (city.length() != 0) {
-            City town = new City(city, citiesFinder.getFirstLetter(city));
-            if (manager.checkCityExistence(town)) {
-                if (!manager.checkIfUsed(town)) {
-                    if (lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())) {
-                        if (!checkIfGameIsFinished(lastCity)) {
-                            manager.inputUsedCity(town);
-                            String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
-                            String answerCity = findAnswerCity(requestedLetter);
-                            lastCity = answerCity;
-                            tvCompCity.setText(answerCity);
-                            etEnterCity.setText("");
-                            score++;
-                            tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
-                        } else {
-                            onNewGameStarted(true, true);
-                        }
+        City town = new City(city, citiesFinder.getFirstLetter(city));
+        if (manager.checkCityExistence(town)) {
+            if (!manager.checkIfUsed(town)) {
+                if (lastCity == null || citiesFinder.getFirstLetter(city).equals(citiesFinder.getLastLetter(lastCity).toUpperCase())) {
+                    if (!checkIfGameIsFinished(lastCity)) {
+                        manager.inputUsedCity(town);
+                        String requestedLetter = citiesFinder.getLastLetter(city).toUpperCase();
+                        String answerCity = findAnswerCity(requestedLetter);
+                        lastCity = answerCity;
+                        tvCompCity.setText(answerCity);
+                        etEnterCity.setText("");
+                        score++;
+                        tvScore.setText(getResources().getString(R.string.score) + String.valueOf(score));
                     } else {
-                        Toast.makeText(getActivity(), R.string.wrong_letter, Toast.LENGTH_SHORT).show();
+                        onNewGameStarted(true, true);
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.used, Toast.LENGTH_SHORT).show();
-                    etEnterCity.setText(null);
+                    Toast.makeText(getActivity(), R.string.wrong_letter, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getActivity(), R.string.wrong_city, Toast.LENGTH_SHORT)
-                        .show();
+                Toast.makeText(getActivity(), R.string.used, Toast.LENGTH_SHORT).show();
                 etEnterCity.setText(null);
             }
         } else {
-            Toast.makeText(getActivity(), R.string.enter_city_first, Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getActivity(), R.string.wrong_city, Toast.LENGTH_SHORT)
+                    .show();
+            etEnterCity.setText(null);
         }
     }
 
@@ -243,5 +248,36 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
         }else{
             btOk.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        facebookManager = new FacebookManager(getActivity());
+        uiHelper = new UiLifecycleHelper(getActivity(), facebookManager.getCallback());
+        uiHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+    @Override
+    public void onShareButtonClick() {
+        facebookManager.loginToFb(getActivity(), this);
     }
 }

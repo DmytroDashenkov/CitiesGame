@@ -31,7 +31,15 @@ public class DBManager {
 	public boolean checkCityExistence(City city) {
 		Cursor c = db.query(Constants.MAIN_TABLE_NAME, null, "Name = ?",
 				new String[] { city.getName() }, null, null, null);
-		return c.moveToFirst();
+		if (c.moveToFirst()){
+            return true;
+        }
+        else{
+            c = db.query(Constants.MAIN_TABLE_NAME, null, "Name = ?",
+                    new String[] { city.getName().toLowerCase() }, null, null, null);
+            return c.moveToFirst();
+        }
+
 	}
 
 	public boolean initCursor() {

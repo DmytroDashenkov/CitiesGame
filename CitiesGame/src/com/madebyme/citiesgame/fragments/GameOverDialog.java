@@ -5,11 +5,10 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.facebook.android.Facebook;
 import com.madebyme.citiesgame.App;
-import com.madebyme.citiesgame.facebook.FacebookManager;
-import com.madebyme.citiesgame.models.GameSave;
+import com.madebyme.citiesgame.listeners.ShareButtonPressedListener;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
+import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.listeners.UserNameCallBack;
 import com.madebyme.citiesgame.views.CitiesButton;
@@ -28,9 +27,14 @@ public class GameOverDialog extends DialogFragment implements View.OnClickListen
     private CitiesTextView tvScore;
     private CitiesEditText etUserName;
     private Bundle bundle;
+    private ShareButtonPressedListener callback;
 
     public void setListener(OnClickDialogButtonListener listener) {
         this.listener = listener;
+    }
+
+    public void setCallback(ShareButtonPressedListener callback) {
+        this.callback = callback;
     }
 
     @Override
@@ -57,28 +61,25 @@ public class GameOverDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View v) {
         int result = bundle.getInt("score", 0);
         switch (v.getId()){
+            case R.id.share:
+                callback.onShareButtonClick();
             case R.id.dialog_ok:
                 listener.onDialogButtonClick();
                 App.getDBManager().inputHighScore(new GameSave(getUserName(), result, getCurrentDate()));
                 dismiss();
-                break;
-            case R.id.share:
-                FacebookManager facebookManager = new  FacebookManager(getActivity(), this);
-                facebookManager.loginToFb(this);
-                facebookManager.postHighScoreOnFacebook(result, getActivity());
-                break;
         }
     }
 
-    public static GameOverDialog newInstance(OnClickDialogButtonListener listener){
+    public static GameOverDialog newInstance(OnClickDialogButtonListener listener, ShareButtonPressedListener callback){
         GameOverDialog dialog = new GameOverDialog();
         dialog.setListener(listener);
+        dialog.setCallback(callback);
         return dialog;
     }
 
     private String getCurrentDate(){
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm");
         return sdf.format(date);
     }
 
