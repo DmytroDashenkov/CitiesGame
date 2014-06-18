@@ -34,6 +34,10 @@ public class MainActivity extends FragmentActivity {
         init();
         showFragment(mainGameFragment, false);
         getHashKey();
+        /*Uri targetUrl = AppLinks.getTargetUrl(getIntent());
+        if (targetUrl != null) {
+            Log.i("Activity", "Target URL: " + targetUrl.toString());
+        }*/
     }
 
     @Override
@@ -78,7 +82,7 @@ public class MainActivity extends FragmentActivity {
     private void getHashKey(){
         PackageInfo info;
         try {
-            info = getPackageManager().getPackageInfo("com.you.name", PackageManager.GET_SIGNATURES);
+            info = getPackageManager().getPackageInfo("com.madebyme.citiesgame", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md;
                 md = MessageDigest.getInstance("SHA");

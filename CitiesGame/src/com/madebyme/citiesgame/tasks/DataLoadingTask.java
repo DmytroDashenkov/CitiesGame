@@ -6,11 +6,11 @@ import android.util.Log;
 import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
 import com.madebyme.citiesgame.db.CitiesFinder;
 
-public class MyTask extends AsyncTask<Context, Void, Void> {
+public class DataLoadingTask extends AsyncTask<Context, Void, Void> {
 
     private OnDataLoadedListener listener;
 
-    public MyTask(OnDataLoadedListener listener) {
+    public DataLoadingTask(OnDataLoadedListener listener) {
         this.listener = listener;
     }
 

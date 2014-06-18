@@ -22,5 +22,8 @@
     <string name="score">Счет:</string>
     <string name="app_id">327881990693475</string>
     <string name="f">f</string>
+    <string name="network_error">Проблема с подключением к сети</string>
+    <string name="publish_canceled">Отмена публикования</string>
+    <string name="published">Рекорд опубликован!</string>
 
 </resources>

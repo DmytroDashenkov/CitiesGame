@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.listeners.ShareButtonPressedListener;
 import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
+import com.madebyme.citiesgame.listeners.ShareFlagHolder;
 import com.madebyme.citiesgame.models.GameSave;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.listeners.UserNameCallBack;
@@ -19,7 +20,7 @@ import com.madebyme.citiesgame.views.FacebookShareButton;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class GameOverDialog extends DialogFragment implements View.OnClickListener, UserNameCallBack {
+public class GameOverDialog extends DialogFragment implements View.OnClickListener, UserNameCallBack{
 
     private OnClickDialogButtonListener listener;
     private CitiesButton bt_ok;
@@ -28,6 +29,7 @@ public class GameOverDialog extends DialogFragment implements View.OnClickListen
     private CitiesEditText etUserName;
     private Bundle bundle;
     private ShareButtonPressedListener callback;
+    private boolean shareFlag;
 
     public void setListener(OnClickDialogButtonListener listener) {
         this.listener = listener;
@@ -90,6 +92,5 @@ public class GameOverDialog extends DialogFragment implements View.OnClickListen
             name = "Игрок";
         return name;
     }
-
 }
 

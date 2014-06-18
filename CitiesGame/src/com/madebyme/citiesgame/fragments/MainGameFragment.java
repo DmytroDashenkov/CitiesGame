@@ -8,29 +8,30 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.FacebookDialog;
 import com.madebyme.citiesgame.App;
 import com.madebyme.citiesgame.Constants;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.db.CitiesFinder;
 import com.madebyme.citiesgame.db.DBManager;
 import com.madebyme.citiesgame.facebook.FacebookManager;
-import com.madebyme.citiesgame.listeners.ShareButtonPressedListener;
-import com.madebyme.citiesgame.listeners.OnClickDialogButtonListener;
-import com.madebyme.citiesgame.listeners.OnDataLoadedListener;
+import com.madebyme.citiesgame.listeners.*;
 import com.madebyme.citiesgame.models.City;
-import com.madebyme.citiesgame.tasks.MyTask;
+import com.madebyme.citiesgame.tasks.DataLoadingTask;
 import com.madebyme.citiesgame.views.CitiesButton;
 import com.madebyme.citiesgame.views.CitiesEditText;
 import com.madebyme.citiesgame.views.CitiesTextView;
 
 public class MainGameFragment extends Fragment implements View.OnClickListener,
-        OnDataLoadedListener, OnClickDialogButtonListener, ShareButtonPressedListener{
+        OnDataLoadedListener, OnClickDialogButtonListener, ShareButtonPressedListener, FbDialogCallBack,
+        ShareFlagHolder{
 
     private CitiesButton btOk;
     private CitiesEditText etEnterCity;
@@ -47,6 +48,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     private GameOverDialog dialog;
     private UiLifecycleHelper uiHelper;
     private FacebookManager facebookManager;
+    private boolean shareFlag;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
         init(view);
         changeOkVisibility(false);
         if (!manager.initCursor()) {
-            MyTask task = new MyTask(this);
+            DataLoadingTask task = new DataLoadingTask(this);
             task.execute(getActivity());
         }
         lastCity = loadLastCityAndScoreFromPreferences();
@@ -259,7 +261,7 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        facebookManager = new FacebookManager(getActivity());
+        facebookManager = new FacebookManager(getActivity(), this, this);
         uiHelper = new UiLifecycleHelper(getActivity(), facebookManager.getCallback());
         uiHelper.onCreate(savedInstanceState);
     }
@@ -267,7 +269,17 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data, new FacebookDialog.Callback() {
+            @Override
+            public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
+                Log.e("Activity", String.format("Error: %s", error.toString()));
+            }
+
+            @Override
+            public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
+                Log.i("Activity", "Success!");
+            }
+        });
     }
 
     @Override
@@ -279,5 +291,24 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onShareButtonClick() {
         facebookManager.loginToFb(getActivity(), this);
+        shareFlag = true;
+    }
+
+    @Override
+    public void share(int result) {
+        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
+                .setDescription(facebookManager.formPostDescription())
+                .build();
+        uiHelper.trackPendingDialogCall(shareDialog.present());
+    }
+
+    @Override
+    public boolean getFlag() {
+        return shareFlag;
+    }
+
+    @Override
+    public void setFlag(boolean flag) {
+        shareFlag = flag;
     }
 }

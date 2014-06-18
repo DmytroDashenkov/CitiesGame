@@ -6,31 +6,37 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 import com.facebook.*;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import com.facebook.android.Facebook;
+import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.WebDialog;
+import com.madebyme.citiesgame.R;
+import com.madebyme.citiesgame.listeners.FbDialogCallBack;
+import com.madebyme.citiesgame.listeners.ShareFlagHolder;
 
 public class FacebookManager {
 
     private Context context;
     private int resultToPost;
-
-    public void setResultToPost(int resultToPost) {
-        this.resultToPost = resultToPost;
-    }
+    private FbDialogCallBack fbDialogCallBack;
+    private ShareFlagHolder shareFlagHolder;
 
     private Session.StatusCallback callback = new Session.StatusCallback() {
 
         @Override
         public void call(Session session, SessionState state,
                          Exception exception) {
-            postHighScoreOnFacebook();
+            if (shareFlagHolder.getFlag()){
+                postHighScoreOnFacebook();
+                shareFlagHolder.setFlag(false);
+            }
 
         }
     };
 
-    public FacebookManager(Context context) {
+    public FacebookManager(Context context, FbDialogCallBack fbDialogCallBack, ShareFlagHolder shareFlagHolder) {
         this.context = context;
+        this.fbDialogCallBack = fbDialogCallBack;
+        this.shareFlagHolder = shareFlagHolder;
     }
 
 
@@ -45,36 +51,11 @@ public class FacebookManager {
     }
 
     public void postHighScoreOnFacebook(){
-        Session session = Session.getActiveSession();
-        Log.i("session", session.getState().name());
-        Bundle postParams = new Bundle();
-        postParams.putString("message", String.valueOf(resultToPost));
-        Request.Callback callback = new Request.Callback() {
-            @Override
-            public void onCompleted(Response response) {
-                if(response.getGraphObject() != null){
-                    JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
-                    String postId = null;
-                    try {
-                        postId = graphResponse.getString("id");
-                    } catch (JSONException e) {
-                        Log.i("error", "JSON error " + e.getMessage());
-                    }
-                    FacebookRequestError error = response.getError();
-                    if (error != null) {
-                        Toast.makeText(context, error.getErrorMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, postId, Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        };
-
-        Request request = new Request(session, "me/feed", postParams,
-                HttpMethod.POST, callback);
-
-        RequestAsyncTask task = new RequestAsyncTask(request);
-        task.execute();
+        if (FacebookDialog.canPresentShareDialog(context, FacebookDialog.ShareDialogFeature.SHARE_DIALOG)){
+            shareWithFbDialog();
+        }else{
+            shareWithWebDialog();
+        }
     }
 
 
@@ -82,4 +63,64 @@ public class FacebookManager {
         return callback;
     }
 
+    private void shareWithFbDialog(){
+        fbDialogCallBack.share(resultToPost);
+    }
+
+    private void shareWithWebDialog(){
+        Bundle params = new Bundle();
+        params.putString("name", "Рекорд в Cities Game");
+        params.putString("caption", "");
+        params.putString("description", formPostDescription());
+        params.putString("link", "");
+        params.putString("picture", "");
+
+        WebDialog feedDialog = (
+                new WebDialog.FeedDialogBuilder(context,
+                        Session.getActiveSession(),
+                        params))
+                .setOnCompleteListener(new WebDialog.OnCompleteListener() {
+
+                    @Override
+                    public void onComplete(Bundle values,
+                                           FacebookException error) {
+                        if (error == null) {
+                            final String postId = values.getString("post_id");
+                            if (postId != null) {
+                                Toast.makeText(context,
+                                        context.getResources().getString(R.string.published),
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context,
+                                        context.getResources().getString(R.string.publish_canceled),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (error instanceof FacebookOperationCanceledException) {
+                            Toast.makeText(context,
+                                    context.getResources().getString(R.string.publish_canceled),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context,
+                                    context.getResources().getString(R.string.network_error),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                })
+                .build();
+        feedDialog.show();
+    }
+
+    public String formPostDescription(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Я поставил новый рекорд в Cities Game- лучшей игре в города для Android! Мой рекорд: ");
+        sb.append(String.valueOf(resultToPost));
+        sb.append(". Слабо побить?");
+        return sb.toString();
+    }
+
+    public void setResultToPost(int resultToPost) {
+        this.resultToPost = resultToPost;
+    }
 }
+
