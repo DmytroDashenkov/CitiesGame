@@ -7,8 +7,10 @@ import android.util.Log;
 import android.widget.Toast;
 import com.facebook.*;
 import com.facebook.android.Facebook;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.WebDialog;
+import com.madebyme.citiesgame.Constants;
 import com.madebyme.citiesgame.R;
 import com.madebyme.citiesgame.listeners.FbDialogCallBack;
 import com.madebyme.citiesgame.listeners.ShareFlagHolder;
@@ -47,7 +49,6 @@ public class FacebookManager {
         } else {
             Session.openActiveSession(context, fragment, true, callback);
         }
-        Log.e("name", session.getState().name());
     }
 
     public void postHighScoreOnFacebook(){
@@ -69,16 +70,17 @@ public class FacebookManager {
 
     private void shareWithWebDialog(){
         Bundle params = new Bundle();
-        params.putString("name", "Рекорд в Cities Game");
-        params.putString("caption", "");
+        params.putString("name", "Cities Game");
+        params.putString("caption", "Новый рекорд!");
         params.putString("description", formPostDescription());
-        params.putString("link", "");
-        params.putString("picture", "");
+        params.putString("link", Constants.GOOGLE_PLAY_URL);
+        params.putString("picture", Constants.ICON_URL);
 
-        WebDialog feedDialog = (
+
+        WebDialog feedDialog =
                 new WebDialog.FeedDialogBuilder(context,
                         Session.getActiveSession(),
-                        params))
+                        params)
                 .setOnCompleteListener(new WebDialog.OnCompleteListener() {
 
                     @Override
@@ -122,5 +124,6 @@ public class FacebookManager {
     public void setResultToPost(int resultToPost) {
         this.resultToPost = resultToPost;
     }
+
 }
 

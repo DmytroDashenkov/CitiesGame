@@ -19,6 +19,9 @@ public class Constants {
     public static final String FONT_FILE_MAME = "font.ttf";
     public static final String FONT_FB = "facebook_font.ttf";
 
+    public static final String GOOGLE_PLAY_URL = "https://play.google.com";
+    public static final String ICON_URL = "https://raw.githubusercontent.com/DmytroDashenkov/CitiesGame/newBranch/CitiesGame/ic_launcher-web.png";
+
     public static final int FOR_VICTORY_PRISE = 100;
 
 }

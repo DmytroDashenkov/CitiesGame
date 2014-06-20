@@ -297,7 +297,9 @@ public class MainGameFragment extends Fragment implements View.OnClickListener,
     @Override
     public void share(int result) {
         FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(getActivity())
+                .setLink(Constants.GOOGLE_PLAY_URL)
                 .setDescription(facebookManager.formPostDescription())
+                .setPicture(Constants.ICON_URL)
                 .build();
         uiHelper.trackPendingDialogCall(shareDialog.present());
     }
