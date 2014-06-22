@@ -11,5 +11,6 @@
     <dimen name="user_name_margin_top">42dp</dimen>
     <dimen name="new_game_bt_height">40dp</dimen>
     <dimen name="f_letter_size">45dp</dimen>
+    <dimen name="sm_behind_offset">50dp</dimen>
 
 </resources>

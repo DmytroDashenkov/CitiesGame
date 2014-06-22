@@ -95,4 +95,8 @@ public class CitiesFinder {
 		}
 		return letter;
 	}
+
+    public String getWordFromSecondLetter(String s){
+        return s.substring(1, s.length()- 1);
+    }
 }

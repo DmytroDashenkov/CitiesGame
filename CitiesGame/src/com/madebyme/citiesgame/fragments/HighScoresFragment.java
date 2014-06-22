@@ -21,6 +21,7 @@ public class HighScoresFragment extends Fragment{
     private CitiesTextView noScores;
     private int itemsAmount;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.highscores_fragment, null);

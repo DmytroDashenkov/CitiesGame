@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Base64;
 import android.util.Log;
 import android.view.*;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.madebyme.citiesgame.*;
 import com.madebyme.citiesgame.fragments.HighScoresFragment;
 import com.madebyme.citiesgame.fragments.MainGameFragment;
@@ -22,9 +23,6 @@ public class MainActivity extends FragmentActivity {
 
     private MainGameFragment mainGameFragment;
     private HighScoresFragment highScoresFragment;
-    private int currentFragment;
-    private final int MAIN_GAME_FRAGMENT_INDEX = 0;
-    private final int HIGH_SCORES_FRAGMENT_INDEX = 1;
 
 
     @Override
@@ -32,26 +30,10 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.source_layout);
         init();
-        showFragment(mainGameFragment, false);
+        attachSlidingMenu();
+        showFragment(mainGameFragment);
         getHashKey();
-        /*Uri targetUrl = AppLinks.getTargetUrl(getIntent());
-        if (targetUrl != null) {
-            Log.i("Activity", "Target URL: " + targetUrl.toString());
-        }*/
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(currentFragment != HIGH_SCORES_FRAGMENT_INDEX){
-            showFragment(highScoresFragment, true);
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void init(){
@@ -59,24 +41,15 @@ public class MainActivity extends FragmentActivity {
         highScoresFragment = HighScoresFragment.newInstance();
     }
 
-    private void showFragment(Fragment fragment, boolean shouldAddToBackStack){
+    private void showFragment(Fragment fragment){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.source_layout, fragment);
-        if(shouldAddToBackStack){
-            fragmentTransaction.addToBackStack(null);
+
+        if(fragment instanceof MainGameFragment){
+            fragmentTransaction.replace(R.id.source_layout, fragment);
+        }else{
+            fragmentTransaction.replace(R.id.menu_frame, fragment);
         }
         fragmentTransaction.commit();
-        if(fragment instanceof MainGameFragment){
-            currentFragment = MAIN_GAME_FRAGMENT_INDEX;
-        }else{
-            currentFragment = HIGH_SCORES_FRAGMENT_INDEX;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        currentFragment = MAIN_GAME_FRAGMENT_INDEX;
     }
 
     private void getHashKey(){
@@ -88,7 +61,6 @@ public class MainActivity extends FragmentActivity {
                 md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 String something = new String(Base64.encode(md.digest(), 0));
-                //String something = new String(Base64.encodeBytes(md.digest()));
                 Log.e("hash key", something);
             }
         } catch (PackageManager.NameNotFoundException e1) {
@@ -98,5 +70,14 @@ public class MainActivity extends FragmentActivity {
         } catch (Exception e) {
             Log.e("exception", e.toString());
         }
+    }
+
+    private void attachSlidingMenu(){
+        SlidingMenu slidingMenu = new SlidingMenu(this);
+        slidingMenu.setMenu(R.layout.menu_frame);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        slidingMenu.setBehindOffset((int)getResources().getDimension(R.dimen.sm_behind_offset));
+        showFragment(highScoresFragment);
     }
 }

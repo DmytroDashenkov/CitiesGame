@@ -35,8 +35,11 @@ public class DBManager {
             return true;
         }
         else{
+            String st = city.getName();
+            String s = city.getFirstLetter().toUpperCase() + st.substring(1, st.length());
+            Log.d("word", s);
             c = db.query(Constants.MAIN_TABLE_NAME, null, "Name = ?",
-                    new String[] { city.getName().toLowerCase() }, null, null, null);
+                    new String[] { s }, null, null, null);
             return c.moveToFirst();
         }
 
@@ -71,10 +74,7 @@ public class DBManager {
         Cursor general = db.rawQuery(
                 "SELECT * FROM " + Constants.SUPPORTING_TABLE_NAME + " WHERE " + Constants.COLUMN_FIRST_LETTER + " = ?",
                 new String[]{letter});
-        if (used.getCount() == general.getCount())
-            return true;
-        else
-            return false;
+        return used.getCount() == general.getCount();
     }
 
     public void inputUsedCity(City model){
